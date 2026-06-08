@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --tierone-bg: #ffffff;
+  --tierone-text: #172033;
+  --tierone-accent: #c5272d;
+}
+
+body {
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--tierone-bg);
+  color: var(--tierone-text);
+  margin: 0;
+}
+
+.input {
+  @apply w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-base text-slate-800 shadow-sm focus:border-tierRed focus:outline-none focus:ring-2 focus:ring-tierRed/20;
+}
