@@ -10,9 +10,12 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        tierRed: '#c5272d',
-        tierNavy: '#172033',
-        tierGold: '#d9a441'
+        tierNavy: '#172437',
+        tierInk: '#111722',
+        tierGold: '#e8c777',
+        tierGoldMuted: '#b9a16d',
+        tierStone: '#7a705f',
+        tierMist: '#f5f2ea'
       },
       keyframes: {
         'float-pulse': {

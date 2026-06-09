@@ -5,7 +5,8 @@ export const metadata: Metadata = {
   title: 'Tier One Sports Events',
   description: 'Tier One Sports Events is preparing a premium sports events experience.',
   icons: {
-    icon: '/favicon.svg',
+    icon: '/favicon.png',
+    apple: '/apple-touch-icon.png',
   },
 };
 

@@ -4,9 +4,13 @@
 
 :root {
   color-scheme: light;
-  --tierone-bg: #ffffff;
-  --tierone-text: #172033;
-  --tierone-accent: #c5272d;
+  --tierone-bg: #f8f6f0;
+  --tierone-surface: #ffffff;
+  --tierone-text: #111722;
+  --tierone-navy: #172437;
+  --tierone-gold: #e8c777;
+  --tierone-muted-gold: #b9a16d;
+  --tierone-stone: #7a705f;
 }
 
 body {
@@ -17,5 +21,5 @@ body {
 }
 
 .input {
-  @apply w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-base text-slate-800 shadow-sm focus:border-tierRed focus:outline-none focus:ring-2 focus:ring-tierRed/20;
+  @apply w-full rounded-xl border border-tierGoldMuted/30 bg-white px-4 py-3 text-base text-tierInk shadow-sm focus:border-tierGold focus:outline-none focus:ring-2 focus:ring-tierGold/30;
 }

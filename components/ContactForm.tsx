@@ -71,7 +71,7 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-lg">
+    <form onSubmit={handleSubmit} className="space-y-6 rounded-2xl border border-tierGoldMuted/30 bg-white p-8 shadow-xl shadow-tierNavy/10">
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <FormField label="Name" required>
           <input
@@ -137,13 +137,13 @@ export function ContactForm() {
         />
       </FormField>
 
-      <label className="flex items-start gap-3 text-base text-slate-600">
+      <label className="flex items-start gap-3 text-base text-tierStone">
         <input
           type="checkbox"
           name="consent"
           checked={formData.consent}
           onChange={handleChange('consent')}
-          className="mt-1.5 h-5 w-5 rounded border-slate-300 text-tierRed focus:ring-tierRed"
+          className="mt-1.5 h-5 w-5 rounded border-tierGoldMuted text-tierNavy focus:ring-tierGold"
           required
         />
         <span>
@@ -154,13 +154,13 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={isSubmitDisabled}
-        className={`w-full rounded-full px-6 py-3 font-semibold text-white transition ${formData.consent ? 'bg-tierRed hover:bg-tierNavy' : 'bg-slate-200 text-slate-500 cursor-not-allowed'}`}
+        className={`w-full rounded-full px-6 py-3 font-semibold transition ${formData.consent ? 'bg-tierNavy text-white shadow-lg shadow-tierNavy/20 hover:bg-tierInk' : 'bg-tierGoldMuted/20 text-tierStone cursor-not-allowed'}`}
       >
         {submitting ? 'Sending…' : 'Send enquiry'}
       </button>
 
       {status.type !== 'idle' && (
-        <p className={`text-sm ${status.type === 'success' ? 'text-emerald-600' : 'text-red-600'}`}>
+        <p className={`text-sm ${status.type === 'success' ? 'text-emerald-700' : 'text-red-700'}`}>
           {status.message}
         </p>
       )}
@@ -176,9 +176,9 @@ interface FormFieldProps {
 
 function FormField({ label, required, children }: FormFieldProps) {
   return (
-    <label className="flex flex-col gap-2 text-sm font-semibold text-slate-700">
+    <label className="flex flex-col gap-2 text-sm font-semibold text-tierNavy">
       <span>
-        {label} {required && <span className="text-red-600">*</span>}
+        {label} {required && <span className="text-tierGoldMuted">*</span>}
       </span>
       {children}
     </label>
