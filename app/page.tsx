@@ -14,7 +14,7 @@ export default function HomePage() {
       <div className="mx-auto flex min-h-[calc(100vh-6rem)] max-w-4xl flex-col items-center justify-center">
         <Link
           href="/"
-          className="block rounded-full shadow-2xl shadow-tierNavy/25 transition hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-tierGold/40"
+          className="logo-flare block rounded-full shadow-2xl shadow-tierNavy/25 transition hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-tierGold/40"
           aria-label="Tier One Sports Events home"
         >
           <Image

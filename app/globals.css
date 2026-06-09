@@ -23,3 +23,80 @@ body {
 .input {
   @apply w-full rounded-xl border border-tierGoldMuted/30 bg-white px-4 py-3 text-base text-tierInk shadow-sm focus:border-tierGold focus:outline-none focus:ring-2 focus:ring-tierGold/30;
 }
+
+.logo-flare {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.logo-flare::before,
+.logo-flare::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.logo-flare::before {
+  inset: -34%;
+  background:
+    radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.9), transparent 0 8%, rgba(232, 199, 119, 0.35) 11%, transparent 20%),
+    linear-gradient(115deg, transparent 34%, rgba(255, 255, 255, 0.78) 46%, rgba(232, 199, 119, 0.45) 50%, transparent 62%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  transform: translateX(-68%) rotate(10deg);
+  animation: logo-flare-sweep 4.8s ease-in-out infinite;
+}
+
+.logo-flare::after {
+  height: 42%;
+  left: 16%;
+  top: 12%;
+  width: 42%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.75), rgba(232, 199, 119, 0.28) 32%, transparent 68%);
+  filter: blur(3px);
+  mix-blend-mode: screen;
+  opacity: 0.45;
+  transform: scale(0.85);
+  animation: logo-flare-glow 4.8s ease-in-out infinite;
+}
+
+@keyframes logo-flare-sweep {
+  0%,
+  42%,
+  100% {
+    opacity: 0;
+    transform: translateX(-68%) rotate(10deg);
+  }
+
+  55% {
+    opacity: 0.95;
+  }
+
+  72% {
+    opacity: 0;
+    transform: translateX(68%) rotate(10deg);
+  }
+}
+
+@keyframes logo-flare-glow {
+  0%,
+  42%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.85);
+  }
+
+  58% {
+    opacity: 0.8;
+    transform: scale(1.04);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-flare::before,
+  .logo-flare::after {
+    animation: none;
+  }
+}
