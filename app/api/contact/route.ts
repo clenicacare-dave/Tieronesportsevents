@@ -30,6 +30,60 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid JSON body.' }, { status: 400 });
   }
 
+  // Simple honeypot: if the hidden "website" field is filled, treat as spam and drop silently
+  if (body.website && body.website.trim().length > 0) {
+    console.warn('Contact form honeypot triggered, dropping submission.');
+    return NextResponse.json({ success: true });
+  }
+
+  // Basic in-memory rate limiting per IP (best-effort; persists only for this server instance)
+  const RATE_LIMIT_WINDOW_MS = 20 * 1000; // 20 seconds between submissions
+  // store timestamps per IP
+  ;(global as any)._contactRateLimit = (global as any)._contactRateLimit || new Map<string, number>();
+  const rateLimitMap: Map<string, number> = (global as any)._contactRateLimit;
+  const ip =
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || request.headers.get('x-real-ip') || 'unknown';
+  const now = Date.now();
+  const last = rateLimitMap.get(ip) || 0;
+  if (now - last < RATE_LIMIT_WINDOW_MS) {
+    return NextResponse.json({ error: 'Too many submissions. Please wait a moment and try again.' }, { status: 429 });
+  }
+  rateLimitMap.set(ip, now);
+
+  // If a reCAPTCHA secret is configured, verify the token provided by the client
+  const recaptchaSecret = process.env.RECAPTCHA_SECRET;
+  const token = body.recaptchaToken;
+  if (recaptchaSecret) {
+    if (!token) {
+      return NextResponse.json({ error: 'reCAPTCHA verification failed.' }, { status: 403 });
+    }
+
+    try {
+      const params = new URLSearchParams();
+      params.append('secret', recaptchaSecret);
+      params.append('response', token);
+      params.append('remoteip', ip);
+
+      const verifyRes = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params.toString()
+      });
+
+      const verifyJson = await verifyRes.json();
+      const score = typeof verifyJson.score === 'number' ? verifyJson.score : undefined;
+      const action = verifyJson.action;
+
+      if (!verifyJson.success || (score !== undefined && score < 0.5) || action !== 'contact') {
+        console.warn('reCAPTCHA verification failed', verifyJson);
+        return NextResponse.json({ error: 'reCAPTCHA verification failed.' }, { status: 403 });
+      }
+    } catch (err) {
+      console.error('reCAPTCHA verification error', err);
+      return NextResponse.json({ error: 'reCAPTCHA verification failed.' }, { status: 403 });
+    }
+  }
+
   const name = body.name?.trim();
   const email = body.email?.trim().toLowerCase();
   const phone = body.phone?.trim() || 'Not provided';

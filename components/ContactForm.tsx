@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useMemo, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react';
 import type { ContactFormData } from '@/types/contact';
 
 type FormStatus =
@@ -15,9 +15,23 @@ const createInitialPayload = (): ContactFormData => ({
   subject: '',
   message: '',
   consent: false
+  ,website: ''
+  ,recaptchaToken: ''
 });
 
 export function ContactForm() {
+  const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+
+  useEffect(() => {
+    if (!siteKey) return;
+    if (typeof window === 'undefined') return;
+    if (document.querySelector('script[src*="recaptcha"]')) return;
+    const s = document.createElement('script');
+    s.src = `https://www.google.com/recaptcha/api.js?render=${siteKey}`;
+    s.async = true;
+    document.head.appendChild(s);
+  }, [siteKey]);
+
   const [formData, setFormData] = useState<ContactFormData>(createInitialPayload());
   const [status, setStatus] = useState<FormStatus>({ type: 'idle' });
   const [submitting, setSubmitting] = useState(false);
@@ -42,10 +56,26 @@ export function ContactForm() {
     setStatus({ type: 'idle' });
 
     try {
+      const payload: any = { ...formData };
+      // If reCAPTCHA site key is configured, execute and attach token
+      if (siteKey && typeof (window as any).grecaptcha !== 'undefined') {
+        await new Promise<void>((resolve) => {
+          (window as any).grecaptcha.ready(() => {
+            (window as any).grecaptcha
+              .execute(siteKey, { action: 'contact' })
+              .then((token: string) => {
+                payload.recaptchaToken = token;
+                resolve();
+              })
+              .catch(() => resolve());
+          });
+        });
+      }
+
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(payload)
       });
 
       if (!response.ok) {
@@ -72,6 +102,22 @@ export function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 rounded-2xl border border-tierGoldMuted/30 bg-white p-8 shadow-xl shadow-tierNavy/10">
+      {/* Honeypot field - visible to bots but hidden from assistive tech/users */}
+      <div className="sr-only" aria-hidden="true">
+        <label>
+          Website
+          <input
+            type="text"
+            name="website"
+            id="website"
+            autoComplete="off"
+            value={(formData as any).website || ''}
+            onChange={handleChange('website' as keyof ContactFormData)}
+            className="input"
+            tabIndex={-1}
+          />
+        </label>
+      </div>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <FormField label="Name" required>
           <input
