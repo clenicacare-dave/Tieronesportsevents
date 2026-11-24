@@ -26,7 +26,7 @@ Create `.env.local` (Next.js will auto-load it) and set:
 - `CONTACT_FORM_TO` - Target address for new enquiries.
 - `CONTACT_FORM_FROM` - Friendly from identity Resend is authorised to send with.
 
-These same variables should be added in Vercel project settings prior to deployment.
+These are set as secrets on the Cloudflare Worker `tieronesportsevents` (dashboard → Workers & Pages → Settings → Variables and Secrets). `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` is public and lives in `.env.production`.
 
 ## Deployment
 
@@ -35,7 +35,7 @@ npm run build
 npm start
 ```
 
-Push to GitHub and deploy on Vercel (recommended). Vercel will detect Next.js, run the build, and expose the App Router API route at `/api/contact`.
+Hosted on Cloudflare Workers via OpenNext. `npm run deploy` builds and deploys; `npm run preview` runs the Worker locally.
 
 ## How to test the email flow
 
