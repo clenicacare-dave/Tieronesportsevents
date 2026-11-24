@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "tieronesportsevents",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": { "enabled": true },
+  "workers_dev": true,
+  // The bare domain redirects to www (next.config.mjs).
+  "routes": [
+    { "pattern": "www.tieronesportsevents.com", "custom_domain": true },
+    { "pattern": "tieronesportsevents.com", "custom_domain": true }
+  ],
+  // Cloudflare Email Service. Sends from mail.tieronesportsevents.com so Zoho's records on the bare domain are untouched.
+  "send_email": [{ "name": "EMAIL", "remote": true }],
+  "vars": { "CONTACT_FORM_FROM": "Tier One Sports Events <no-reply@mail.tieronesportsevents.com>" }
+  // Secrets (npx wrangler secret put NAME): TURNSTILE_SECRET, CONTACT_FORM_TO (the Zoho inbox that receives enquiries).
+  // NEXT_PUBLIC_TURNSTILE_SITE_KEY is public and inlined at build time from .env.production.
+}
