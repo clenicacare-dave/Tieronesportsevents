@@ -159,28 +159,34 @@ export async function POST(request: Request) {
     </div>
   `;
 
+  // The enquiry to the team must succeed; the customer's acknowledgement is best-effort.
+  // (On Cloudflare's free Workers plan, Email Sending only delivers to verified addresses,
+  // so the acknowledgement to a customer's own address may be refused.)
   try {
-    await Promise.all([
-      mail.send({
-        from: fromIdentity,
-        to: forwardTo,
-        replyTo: email,
-        subject: `New website enquiry from ${name}`,
-        text: plainText,
-        html
-      }),
-      mail.send({
-        from: fromIdentity,
-        to: email,
-        subject: 'Thank you for contacting Tier One Sports Events',
-        replyTo: forwardTo,
-        text: acknowledgementMessage.trim(),
-        html: acknowledgementHtml
-      })
-    ]);
+    await mail.send({
+      from: fromIdentity,
+      to: forwardTo,
+      replyTo: email,
+      subject: `New website enquiry from ${name}`,
+      text: plainText,
+      html
+    });
   } catch (error) {
-    console.error('Failed to send contact emails', error);
+    console.error('Failed to send enquiry email', error);
     return NextResponse.json({ error: 'Unable to send email just now.' }, { status: 500 });
+  }
+
+  try {
+    await mail.send({
+      from: fromIdentity,
+      to: email,
+      subject: 'Thank you for contacting Tier One Sports Events',
+      replyTo: forwardTo,
+      text: acknowledgementMessage.trim(),
+      html: acknowledgementHtml
+    });
+  } catch (error) {
+    console.warn('Customer acknowledgement not sent', error);
   }
 
   return NextResponse.json({ success: true });
