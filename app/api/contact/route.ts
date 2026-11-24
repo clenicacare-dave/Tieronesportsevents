@@ -2,12 +2,6 @@ import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import type { ContactFormData } from '@/types/contact';
 
-const resendApiKey = process.env.RESEND_API_KEY;
-const forwardTo = process.env.CONTACT_FORM_TO;
-const fromIdentity = process.env.CONTACT_FORM_FROM;
-
-const resend = resendApiKey ? new Resend(resendApiKey) : null;
-
 const emailRegex =
   // Basic pattern suitable for simple validation
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -16,6 +10,12 @@ export async function POST(request: Request) {
   if (request.headers.get('content-type')?.includes('application/json') !== true) {
     return NextResponse.json({ error: 'Invalid content type.' }, { status: 415 });
   }
+
+  // Read env per request: on Cloudflare Workers secrets are only populated once a request arrives.
+  const resendApiKey = process.env.RESEND_API_KEY;
+  const forwardTo = process.env.CONTACT_FORM_TO;
+  const fromIdentity = process.env.CONTACT_FORM_FROM;
+  const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
   if (!resend || !forwardTo || !fromIdentity) {
     console.error('Contact form email variables missing.');
@@ -42,6 +42,7 @@ export async function POST(request: Request) {
   ;(global as any)._contactRateLimit = (global as any)._contactRateLimit || new Map<string, number>();
   const rateLimitMap: Map<string, number> = (global as any)._contactRateLimit;
   const ip =
+    request.headers.get('cf-connecting-ip') ||
     request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || request.headers.get('x-real-ip') || 'unknown';
   const now = Date.now();
   const last = rateLimitMap.get(ip) || 0;

@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "tieronesportsevents",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": { "enabled": true }
+  // Secrets (npx wrangler secret put NAME): RESEND_API_KEY, RECAPTCHA_SECRET, CONTACT_FORM_TO, CONTACT_FORM_FROM
+  // NEXT_PUBLIC_RECAPTCHA_SITE_KEY is inlined at build time from .env.production.
+}
