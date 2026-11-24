@@ -9,6 +9,12 @@
     "binding": "ASSETS"
   },
   "observability": { "enabled": true },
+  "workers_dev": true,
+  // The bare domain redirects to www (next.config.mjs).
+  "routes": [
+    { "pattern": "www.tieronesportsevents.com", "custom_domain": true },
+    { "pattern": "tieronesportsevents.com", "custom_domain": true }
+  ],
   // Cloudflare Email Service. Sends from mail.tieronesportsevents.com so Zoho's records on the bare domain are untouched.
   "send_email": [{ "name": "EMAIL", "remote": true }],
   "vars": { "CONTACT_FORM_FROM": "Tier One Sports Events <no-reply@mail.tieronesportsevents.com>" }
