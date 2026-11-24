@@ -1,0 +1,10 @@
+$ORIGIN tieronesportsevents.com.
+; DNS for Tier One's own Cloudflare account. Zoho Mail (info@) and DMARC only.
+; The website records are added by the Worker; Email Sending adds its own mail.* records.
+@                 300 IN MX 10 mx.zoho.eu.
+@                 300 IN MX 20 mx2.zoho.eu.
+@                 300 IN MX 50 mx3.zoho.eu.
+@                 300 IN TXT "v=spf1 include:zohomail.eu ~all"
+@                 300 IN TXT "zoho-verification=zb70153468.zmverify.zoho.eu"
+zmail._domainkey  300 IN TXT "v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCo7hP88YZhYJpr6+I3gtj3MQF7mMVHJZTUybTmsdkAsKLp8iqYcolzuxzeL3u9PNex2H5/b0gqIt1vRzDfwTf0kciwldWliL+HKE0dHLwxjgQLl146Kd9eAJHLdxcAKKvZ3BMgAGWe0Pks+maOAPCfbe33TJCnKa0SkcfJVVpEtwIDAQAB"
+_dmarc            300 IN TXT "v=DMARC1; p=none;"

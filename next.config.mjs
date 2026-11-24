@@ -18,5 +18,8 @@ const nextConfig = {
 
 export default nextConfig;
 
-import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
-initOpenNextCloudflareForDev();
+// Only for `next dev`: production builds must not open a remote Cloudflare session.
+if (process.env.NODE_ENV === 'development') {
+  const { initOpenNextCloudflareForDev } = await import('@opennextjs/cloudflare');
+  initOpenNextCloudflareForDev();
+}
