@@ -1,6 +1,7 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, FormEvent, useMemo, useState } from 'react';
+import Script from 'next/script';
 import type { ContactFormData } from '@/types/contact';
 
 type FormStatus =
@@ -16,21 +17,10 @@ const createInitialPayload = (): ContactFormData => ({
   message: '',
   consent: false
   ,website: ''
-  ,recaptchaToken: ''
 });
 
 export function ContactForm() {
-  const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
-
-  useEffect(() => {
-    if (!siteKey) return;
-    if (typeof window === 'undefined') return;
-    if (document.querySelector('script[src*="recaptcha"]')) return;
-    const s = document.createElement('script');
-    s.src = `https://www.google.com/recaptcha/api.js?render=${siteKey}`;
-    s.async = true;
-    document.head.appendChild(s);
-  }, [siteKey]);
+  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
   const [formData, setFormData] = useState<ContactFormData>(createInitialPayload());
   const [status, setStatus] = useState<FormStatus>({ type: 'idle' });
@@ -57,19 +47,10 @@ export function ContactForm() {
 
     try {
       const payload: any = { ...formData };
-      // If reCAPTCHA site key is configured, execute and attach token
-      if (siteKey && typeof (window as any).grecaptcha !== 'undefined') {
-        await new Promise<void>((resolve) => {
-          (window as any).grecaptcha.ready(() => {
-            (window as any).grecaptcha
-              .execute(siteKey, { action: 'contact' })
-              .then((token: string) => {
-                payload.recaptchaToken = token;
-                resolve();
-              })
-              .catch(() => resolve());
-          });
-        });
+      // Cloudflare Turnstile puts its token in a hidden field inside the form.
+      if (siteKey) {
+        const field = event.currentTarget.querySelector<HTMLInputElement>('[name="cf-turnstile-response"]');
+        payload.turnstileToken = field?.value ?? '';
       }
 
       const response = await fetch('/api/contact', {
@@ -96,6 +77,8 @@ export function ContactForm() {
         message
       });
     } finally {
+      // Tokens are single-use: get a fresh one for any further submission.
+      (window as any).turnstile?.reset?.();
       setSubmitting(false);
     }
   }
@@ -196,6 +179,13 @@ export function ContactForm() {
           I consent to Tier One Sports Events contacting me about this enquiry and to my data being processed in line with the privacy notice.
         </span>
       </label>
+
+      {siteKey && (
+        <>
+          <div className="cf-turnstile" data-sitekey={siteKey} data-theme="light" data-size="flexible" />
+          <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" />
+        </>
+      )}
 
       <button
         type="submit"

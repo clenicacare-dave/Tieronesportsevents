@@ -1,6 +1,25 @@
 import { NextResponse } from 'next/server';
-import { Resend } from 'resend';
+import { getCloudflareContext } from '@opennextjs/cloudflare';
 import type { ContactFormData } from '@/types/contact';
+
+// Cloudflare Email Service `send_email` binding: no third party, no API key.
+interface EmailBinding {
+  send(message: {
+    from: string | { email: string; name: string };
+    to: string | string[];
+    replyTo?: string;
+    subject: string;
+    text?: string;
+    html?: string;
+  }): Promise<unknown>;
+}
+
+interface ContactEnv {
+  EMAIL?: EmailBinding;
+  CONTACT_FORM_TO?: string;
+  CONTACT_FORM_FROM?: string;
+  TURNSTILE_SECRET?: string;
+}
 
 const emailRegex =
   // Basic pattern suitable for simple validation
@@ -11,13 +30,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid content type.' }, { status: 415 });
   }
 
-  // Read env per request: on Cloudflare Workers secrets are only populated once a request arrives.
-  const resendApiKey = process.env.RESEND_API_KEY;
-  const forwardTo = process.env.CONTACT_FORM_TO;
-  const fromIdentity = process.env.CONTACT_FORM_FROM;
-  const resend = resendApiKey ? new Resend(resendApiKey) : null;
+  const env = (await getCloudflareContext({ async: true })).env as unknown as ContactEnv;
+  const mail = env.EMAIL;
+  const forwardTo = env.CONTACT_FORM_TO;
+  const fromIdentity = env.CONTACT_FORM_FROM;
 
-  if (!resend || !forwardTo || !fromIdentity) {
+  if (!mail || !forwardTo || !fromIdentity) {
     console.error('Contact form email variables missing.');
     return NextResponse.json({ error: 'Email service not configured.' }, { status: 500 });
   }
@@ -51,37 +69,27 @@ export async function POST(request: Request) {
   }
   rateLimitMap.set(ip, now);
 
-  // If a reCAPTCHA secret is configured, verify the token provided by the client
-  const recaptchaSecret = process.env.RECAPTCHA_SECRET;
-  const token = body.recaptchaToken;
-  if (recaptchaSecret) {
+  // Cloudflare Turnstile check (skipped only if the secret is not configured)
+  const turnstileSecret = env.TURNSTILE_SECRET;
+  if (turnstileSecret) {
+    const token = body.turnstileToken;
     if (!token) {
-      return NextResponse.json({ error: 'reCAPTCHA verification failed.' }, { status: 403 });
+      return NextResponse.json({ error: 'Please complete the security check and try again.' }, { status: 403 });
     }
-
     try {
-      const params = new URLSearchParams();
-      params.append('secret', recaptchaSecret);
-      params.append('response', token);
-      params.append('remoteip', ip);
-
-      const verifyRes = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+      const params = new URLSearchParams({ secret: turnstileSecret, response: token, remoteip: ip });
+      const verifyRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: params.toString()
+        body: params
       });
-
-      const verifyJson = await verifyRes.json();
-      const score = typeof verifyJson.score === 'number' ? verifyJson.score : undefined;
-      const action = verifyJson.action;
-
-      if (!verifyJson.success || (score !== undefined && score < 0.5) || action !== 'contact') {
-        console.warn('reCAPTCHA verification failed', verifyJson);
-        return NextResponse.json({ error: 'reCAPTCHA verification failed.' }, { status: 403 });
+      const verifyJson = (await verifyRes.json()) as { success?: boolean };
+      if (!verifyJson.success) {
+        console.warn('Turnstile verification failed', verifyJson);
+        return NextResponse.json({ error: 'Please complete the security check and try again.' }, { status: 403 });
       }
     } catch (err) {
-      console.error('reCAPTCHA verification error', err);
-      return NextResponse.json({ error: 'reCAPTCHA verification failed.' }, { status: 403 });
+      console.error('Turnstile verification error', err);
+      return NextResponse.json({ error: 'Please complete the security check and try again.' }, { status: 403 });
     }
   }
 
@@ -153,19 +161,19 @@ export async function POST(request: Request) {
 
   try {
     await Promise.all([
-      resend.emails.send({
+      mail.send({
         from: fromIdentity,
         to: forwardTo,
-        reply_to: email,
+        replyTo: email,
         subject: `New website enquiry from ${name}`,
         text: plainText,
         html
       }),
-      resend.emails.send({
+      mail.send({
         from: fromIdentity,
         to: email,
         subject: 'Thank you for contacting Tier One Sports Events',
-        reply_to: fromIdentity,
+        replyTo: forwardTo,
         text: acknowledgementMessage.trim(),
         html: acknowledgementHtml
       })
