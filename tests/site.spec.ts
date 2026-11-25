@@ -69,7 +69,7 @@ test('no page scrolls sideways and the hero badge stays on screen', async ({ pag
     expect(overflow, `${path} overflows by ${overflow}px`).toBeLessThanOrEqual(0);
   }
   await page.goto('/');
-  const badge = await page.locator('.hero-badge img').boundingBox();
+  const badge = await page.locator('.hero-badge img').filter({ visible: true }).boundingBox();
   const width = page.viewportSize()!.width;
   expect(badge!.x).toBeGreaterThanOrEqual(0);
   expect(badge!.x + badge!.width).toBeLessThanOrEqual(width);

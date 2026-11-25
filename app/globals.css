@@ -61,8 +61,8 @@
     animation: rings-breathe 12s ease-in-out infinite;
   }
   @keyframes rings-breathe {
-    0%, 100% { transform: translate(-50%, -50%) scale(1); }
-    50% { transform: translate(-50%, -50%) scale(1.04); }
+    0%, 100% { scale: 1; }
+    50% { scale: 1.04; }
   }
 
   /* Badge: slow float, and a light sweep across it, clipped to the circle. */

@@ -13,20 +13,18 @@ export default function HomePage() {
       {/* Hero */}
       <section className="relative isolate overflow-hidden bg-navy text-white">
         {/* Layers: stadium photo, navy wash (solid behind the text, lighter on the right) with a gold glow, fine rings from the badge. */}
-        <PhotoSlot photo={heroPhoto} rings={false} priority sizes="100vw" className="absolute inset-0 -z-30" />
+        <PhotoSlot photo={heroPhoto} rings={false} creditTop priority sizes="100vw" className="absolute inset-0 -z-30" />
         <div className="hero-glow absolute inset-0 -z-20" />
-        <div className="mx-auto flex max-w-site flex-col px-5 pb-16 pt-12 sm:px-8 sm:pb-20 sm:pt-16 xl:min-h-[640px] xl:justify-end xl:pb-24 xl:pt-24">
-          {/* Badge: above the headline on phones and tablets, beside it on wide screens.
-              Its rings sit behind everything (-z-10 inside the section's stacking context). */}
+        {/* Phones and tablets: rings rise from the bottom centre, behind the badge that straddles the edge below. */}
+        <div aria-hidden="true" className="hero-rings-anim pointer-events-none absolute bottom-0 left-1/2 -z-10 aspect-square w-[1400px] -translate-x-1/2 translate-y-1/2 xl:hidden" />
+        <div className="mx-auto flex max-w-site flex-col px-5 pb-28 pt-14 sm:px-8 sm:pb-36 sm:pt-20 xl:min-h-[640px] xl:justify-end xl:pb-24 xl:pt-24">
+          {/* Wide screens: badge beside the headline, rings centred on it, behind everything. */}
           <div
             aria-hidden="true"
-            className="pointer-events-none relative mb-10 w-[150px] sm:mb-12 sm:w-[200px] xl:absolute xl:right-[6%] xl:top-1/2 xl:-z-10 xl:mb-0 xl:w-[420px] xl:-translate-y-1/2"
+            className="pointer-events-none absolute right-[6%] top-1/2 -z-10 hidden w-[420px] -translate-y-1/2 xl:block"
           >
-            <div className="hero-rings-anim absolute left-1/2 top-1/2 -z-10 aspect-square w-[900%] -translate-x-1/2 -translate-y-1/2 xl:w-[700%]" />
-            <div className="hero-badge relative">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={brand.logo.badgeLarge} alt="" width={480} height={480} className="relative w-full drop-shadow-[0_20px_50px_rgba(0,0,0,0.55)]" />
-            </div>
+            <div className="hero-rings-anim absolute left-1/2 top-1/2 -z-10 aspect-square w-[700%] -translate-x-1/2 -translate-y-1/2" />
+            <HeroBadge />
           </div>
           <Eyebrow tone="light">Experience sport differently</Eyebrow>
           <h1 className="mt-5 max-w-4xl font-heading text-[3.4rem] font-semibold xl:max-w-[56%] uppercase leading-[0.9] sm:text-8xl">{brand.tagline}</h1>
@@ -41,12 +39,17 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      <div aria-hidden="true" className="relative z-10 -mb-6 -mt-[80px] flex justify-center sm:-mt-[100px] xl:hidden">
+        <div className="w-[160px] sm:w-[200px]">
+          <HeroBadge />
+        </div>
+      </div>
 
       {/* Sports */}
       <Section>
         <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
           <SectionHeading eyebrow="Sports" title="Find your next sporting experience" />
-          <Link href="/sports" className="font-semibold text-navy underline decoration-gold decoration-2 underline-offset-8">
+          <Link href="/sports" className="whitespace-nowrap font-semibold text-navy underline decoration-gold decoration-2 underline-offset-8">
             All sports
           </Link>
         </div>
@@ -65,7 +68,7 @@ export default function HomePage() {
             title="Where you could be next"
             intro="A taste of the trips we plan. Every one can be shaped around your group."
           />
-          <Link href="/events" className="font-semibold text-navy underline decoration-gold decoration-2 underline-offset-8">
+          <Link href="/events" className="whitespace-nowrap font-semibold text-navy underline decoration-gold decoration-2 underline-offset-8">
             All events
           </Link>
         </div>
@@ -140,5 +143,14 @@ export default function HomePage() {
 
       <CtaBand />
     </>
+  );
+}
+
+function HeroBadge() {
+  return (
+    <div className="hero-badge relative">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={brand.logo.badgeLarge} alt="" width={480} height={480} className="relative w-full drop-shadow-[0_20px_50px_rgba(0,0,0,0.55)]" />
+    </div>
   );
 }
