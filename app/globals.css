@@ -83,6 +83,34 @@
     to { --ring-o: 56px; }
   }
 
+  /* Desktop hero: faint fixed fine lines (the approved texture) under eased moving rings. */
+  .hero-rings-still {
+    border-radius: 9999px;
+    background-image: repeating-radial-gradient(circle at center, transparent 0 56px, rgb(var(--color-gold) / 0.1) 56px 57px);
+    -webkit-mask-image: radial-gradient(circle at center, #000 45%, transparent 75%);
+    mask-image: radial-gradient(circle at center, #000 45%, transparent 75%);
+  }
+  /* Moving rings leave the badge fast and decelerate as they spread outwards, fading out.
+     Fourteen rings spread over a 12s cycle (negative delays so it starts full); the easing does fast-near, slow-far. */
+  .hero-ripple span {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 100%;
+    aspect-ratio: 1;
+    border: 1.5px solid rgb(var(--color-gold) / 0.5);
+    border-radius: 9999px;
+    translate: -50% -50%;
+    opacity: 0;
+    animation: ripple-out 12s cubic-bezier(0.22, 0.55, 0.4, 1) infinite;
+  }
+  @keyframes ripple-out {
+    0% { width: 100%; opacity: 0; }
+    3% { opacity: 0.9; }
+    60% { opacity: 0.4; }
+    100% { width: 520%; opacity: 0; }
+  }
+
   /* Badge: slow float, and a light sweep across it, clipped to the circle. */
   .hero-badge {
     border-radius: 9999px;

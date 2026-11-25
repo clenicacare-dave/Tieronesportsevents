@@ -23,7 +23,13 @@ export default function HomePage() {
             aria-hidden="true"
             className="pointer-events-none absolute right-[6%] top-1/2 -z-10 hidden w-[420px] -translate-y-1/2 xl:block"
           >
-            <div className="hero-rings-anim absolute left-1/2 top-1/2 -z-10 aspect-square w-[700%] -translate-x-1/2 -translate-y-1/2" />
+            {/* Rings leave the badge fast and slow down as they spread (eased ripple); a still version for reduced motion. */}
+            <div className="hero-ripple absolute inset-0 -z-10 motion-reduce:hidden">
+              {Array.from({ length: 14 }, (_, i) => (
+                <span key={i} style={{ animationDelay: `${-(i * 12) / 14}s` }} />
+              ))}
+            </div>
+            <div className="hero-rings-still absolute left-1/2 top-1/2 -z-20 aspect-square w-[700%] -translate-x-1/2 -translate-y-1/2" />
             <HeroBadge />
           </div>
           <Eyebrow tone="light">Experience sport differently</Eyebrow>
