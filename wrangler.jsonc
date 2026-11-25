@@ -1,6 +1,8 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "tieronesportsevents",
+  // Tier One's own Cloudflare account (dave@tieronesportsevents.com), not 1Zero9's.
+  "account_id": "017c00b8853e00499d11447187100220",
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-11-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],

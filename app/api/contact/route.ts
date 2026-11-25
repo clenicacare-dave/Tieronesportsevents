@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
-import type { ContactFormData } from '@/types/contact';
+import { fieldLimits, type ContactFormData } from '@/types/contact';
+import { site } from '@/lib/site';
 
 // Cloudflare Email Service `send_email` binding: no third party, no API key.
 interface EmailBinding {
@@ -26,6 +27,9 @@ const emailRegex =
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(request: Request) {
+  if (!site.enquiriesEnabled) {
+    return NextResponse.json({ error: `Online enquiries are closed. Please email ${site.email}.` }, { status: 503 });
+  }
   if (request.headers.get('content-type')?.includes('application/json') !== true) {
     return NextResponse.json({ error: 'Invalid content type.' }, { status: 415 });
   }
@@ -93,14 +97,34 @@ export async function POST(request: Request) {
     }
   }
 
-  const name = body.name?.trim();
-  const email = body.email?.trim().toLowerCase();
-  const phone = body.phone?.trim() || 'Not provided';
-  const subject = body.subject?.trim();
-  const message = body.message?.trim();
-  const consentGiven = body.consent === true;
+  // Trim, and collapse line breaks in single-line fields (they end up in email headers).
+  const str = (v: unknown) => (typeof v === 'string' ? v.trim() : '');
+  const line = (v: unknown) => str(v).replace(/[\r\n]+/g, ' ');
+  for (const [field, max] of Object.entries(fieldLimits)) {
+    if (str((body as unknown as Record<string, unknown>)[field]).length > max) {
+      return NextResponse.json({ error: `Please shorten the ${field} field.` }, { status: 400 });
+    }
+  }
 
-  if (!name || !email || !subject || !message) {
+  const isQuote = body.kind === 'quote';
+  const name = line(body.name);
+  const email = line(body.email).toLowerCase();
+  const phone = line(body.phone) || 'Not provided';
+  const interest = line(body.interest);
+  const subject = isQuote ? `Quote request: ${interest}` : line(body.subject);
+  const message = str(body.message);
+  const consentGiven = body.consent === true;
+  const quoteLines: [string, string][] = isQuote
+    ? [
+        ['Interested in', interest],
+        ['Who is travelling', line(body.groupType) || 'Not given'],
+        ['Party size', line(body.partySize) || 'Not given'],
+        ['Dates', line(body.dates) || 'Not given'],
+        ['Travelling from', line(body.departFrom) || 'Not given']
+      ]
+    : [];
+
+  if (!name || !email || !message || (isQuote ? !interest : !subject)) {
     return NextResponse.json({ error: 'Please complete all required fields.' }, { status: 400 });
   }
 
@@ -123,6 +147,7 @@ export async function POST(request: Request) {
     `Email: ${email}`,
     `Phone: ${phone}`,
     `Subject: ${subject}`,
+    ...quoteLines.map(([k, v]) => `${k}: ${v}`),
     '',
     'Message:',
     message
@@ -136,6 +161,7 @@ export async function POST(request: Request) {
         <li><strong>Email:</strong> ${escapeHtml(email)}</li>
         <li><strong>Phone:</strong> ${escapeHtml(phone)}</li>
         <li><strong>Subject:</strong> ${escapeHtml(subject)}</li>
+        ${quoteLines.map(([k, v]) => `<li><strong>${k}:</strong> ${escapeHtml(v)}</li>`).join('')}
       </ul>
       <p><strong>Message:</strong></p>
       <p style="white-space: pre-line;">${escapeHtml(message)}</p>
@@ -159,28 +185,34 @@ export async function POST(request: Request) {
     </div>
   `;
 
+  // The enquiry to the team must succeed; the customer's acknowledgement is best-effort.
+  // (On Cloudflare's free Workers plan, Email Sending only delivers to verified addresses,
+  // so the acknowledgement to a customer's own address may be refused.)
   try {
-    await Promise.all([
-      mail.send({
-        from: fromIdentity,
-        to: forwardTo,
-        replyTo: email,
-        subject: `New website enquiry from ${name}`,
-        text: plainText,
-        html
-      }),
-      mail.send({
-        from: fromIdentity,
-        to: email,
-        subject: 'Thank you for contacting Tier One Sports Events',
-        replyTo: forwardTo,
-        text: acknowledgementMessage.trim(),
-        html: acknowledgementHtml
-      })
-    ]);
+    await mail.send({
+      from: fromIdentity,
+      to: forwardTo,
+      replyTo: email,
+      subject: `${isQuote ? 'Quote request' : 'New website enquiry'} from ${name.replace(/[\r\n]+/g, ' ')}`,
+      text: plainText,
+      html
+    });
   } catch (error) {
-    console.error('Failed to send contact emails', error);
+    console.error('Failed to send enquiry email', error);
     return NextResponse.json({ error: 'Unable to send email just now.' }, { status: 500 });
+  }
+
+  try {
+    await mail.send({
+      from: fromIdentity,
+      to: email,
+      subject: 'Thank you for contacting Tier One Sports Events',
+      replyTo: forwardTo,
+      text: acknowledgementMessage.trim(),
+      html: acknowledgementHtml
+    });
+  } catch (error) {
+    console.warn('Customer acknowledgement not sent', error);
   }
 
   return NextResponse.json({ success: true });
