@@ -1,5 +1,12 @@
 @import '../brand/tokens.css';
 
+/* Animatable ring offset for the hero ripple (app/page.tsx). */
+@property --ring-o {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -56,17 +63,24 @@
       linear-gradient(90deg, rgb(var(--color-navy) / 0.97) 25%, rgb(var(--color-navy) / 0.72) 55%, rgb(var(--color-navy) / 0.5) 100%),
       linear-gradient(180deg, rgb(15 26 38 / 0.35), transparent 30%, transparent 70%, rgb(15 26 38 / 0.55));
   }
-  /* Fine gold lines across the whole hero, centred on the badge, breathing very slowly. */
+  /* Gold rings centred on the badge, rippling outwards continuously and fading as they travel.
+     The ripple animates --ring-o (registered below) through one ring spacing (56px), then repeats. */
   .hero-rings-anim {
     border-radius: 9999px;
-    background-image: repeating-radial-gradient(circle at center, transparent 0 56px, rgb(var(--color-gold) / 0.1) 56px 57px);
-    -webkit-mask-image: radial-gradient(circle at center, #000 45%, transparent 75%);
-    mask-image: radial-gradient(circle at center, #000 45%, transparent 75%);
-    animation: rings-breathe 12s ease-in-out infinite;
+    background-image: repeating-radial-gradient(
+      circle at center,
+      rgb(var(--color-gold) / 0.42) calc(var(--ring-o) - 56px),
+      rgb(var(--color-gold) / 0.42) calc(var(--ring-o) - 54.4px),
+      transparent calc(var(--ring-o) - 54.4px),
+      transparent var(--ring-o)
+    );
+    -webkit-mask-image: radial-gradient(circle at center, #000 8%, rgb(0 0 0 / 0.55) 35%, transparent 72%);
+    mask-image: radial-gradient(circle at center, #000 8%, rgb(0 0 0 / 0.55) 35%, transparent 72%);
+    animation: ring-ripple 3.2s linear infinite;
   }
-  @keyframes rings-breathe {
-    0%, 100% { scale: 1; }
-    50% { scale: 1.04; }
+  @keyframes ring-ripple {
+    from { --ring-o: 0px; }
+    to { --ring-o: 56px; }
   }
 
   /* Badge: slow float, and a light sweep across it, clipped to the circle. */
