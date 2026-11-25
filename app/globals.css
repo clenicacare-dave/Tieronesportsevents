@@ -45,19 +45,24 @@
       radial-gradient(ellipse at 80% 115%, rgb(var(--color-gold) / 0.22), transparent 55%),
       linear-gradient(165deg, rgb(var(--color-navy)) 35%, rgb(15 26 38));
   }
-  /* Home hero: gold rings centred on the badge, slowly breathing outwards. */
+  /* Home hero (the approved look): deep navy shading into a warm gold glow behind the badge. */
+  .hero-glow {
+    background-color: rgb(var(--color-navy));
+    background-image:
+      radial-gradient(circle at 80% 50%, rgb(var(--color-gold) / 0.16), transparent 45%),
+      linear-gradient(165deg, rgb(var(--color-navy) / 0.9) 40%, rgb(15 26 38 / 0.95));
+  }
+  /* Fine gold lines across the whole hero, centred on the badge, breathing very slowly. */
   .hero-rings-anim {
     border-radius: 9999px;
-    background-image:
-      repeating-radial-gradient(circle at center, transparent 0 15px, rgb(var(--color-gold) / 0.24) 15px 16px, transparent 16px 56px),
-      radial-gradient(circle at center, rgb(var(--color-gold) / 0.2), transparent 40%);
-    -webkit-mask-image: radial-gradient(circle at center, #000 25%, transparent 72%);
-    mask-image: radial-gradient(circle at center, #000 25%, transparent 72%);
-    animation: rings-breathe 9s ease-in-out infinite;
+    background-image: repeating-radial-gradient(circle at center, transparent 0 56px, rgb(var(--color-gold) / 0.1) 56px 57px);
+    -webkit-mask-image: radial-gradient(circle at center, #000 45%, transparent 75%);
+    mask-image: radial-gradient(circle at center, #000 45%, transparent 75%);
+    animation: rings-breathe 12s ease-in-out infinite;
   }
   @keyframes rings-breathe {
-    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.85; }
-    50% { transform: translate(-50%, -50%) scale(1.06); opacity: 1; }
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.04); }
   }
 
   /* Badge: slow float, and a light sweep across it, clipped to the circle. */

@@ -12,20 +12,14 @@ export default function HomePage() {
     <>
       {/* Hero */}
       <section className="relative isolate overflow-hidden bg-navy text-white">
-        {/* Layers: stadium photo, navy wash, gold rings radiating from the badge (both gently animated). */}
-        {heroPhoto ? (
-          <>
-            <PhotoSlot photo={heroPhoto} rings={false} priority sizes="100vw" className="absolute inset-0 -z-30" />
-            <div className="absolute inset-0 -z-20 bg-gradient-to-r from-navy via-navy/80 to-navy/35" />
-          </>
-        ) : (
-          <div className="motif absolute inset-0 -z-30" />
-        )}
+        {/* Layers: stadium photo as a faint texture, navy-to-gold glow, fine rings from the badge. */}
+        <PhotoSlot photo={heroPhoto} rings={false} priority sizes="100vw" className="absolute inset-0 -z-30 opacity-[0.22] mix-blend-luminosity" />
+        <div className="hero-glow absolute inset-0 -z-20 opacity-[0.9]" />
         <div
           aria-hidden="true"
           className="pointer-events-none absolute right-[-150px] top-1/2 -z-10 w-[300px] -translate-y-1/2 sm:right-[-70px] sm:w-[380px] lg:right-[6%] lg:w-[420px]"
         >
-          <div className="hero-rings-anim absolute left-1/2 top-1/2 aspect-square w-[420%] -translate-x-1/2 -translate-y-1/2" />
+          <div className="hero-rings-anim absolute left-1/2 top-1/2 aspect-square w-[700%] -translate-x-1/2 -translate-y-1/2" />
           <div className="hero-badge relative opacity-30 sm:opacity-50 lg:opacity-100">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={brand.logo.badgeLarge} alt="" width={480} height={480} className="relative w-full drop-shadow-[0_20px_50px_rgba(0,0,0,0.55)]" />
