@@ -26,7 +26,7 @@ export function ServicePage({ slug }: { slug: Service['slug'] }) {
 
       <section className="bg-surface">
         <div className="mx-auto grid max-w-site lg:grid-cols-[1fr_1.1fr]">
-          <PhotoSlot photo={s.photo} label={s.eyebrow.split(' ')[0]} className="min-h-[280px] lg:min-h-full" sizes="(min-width: 1024px) 45vw, 100vw" />
+          <PhotoSlot photo={s.photo} label={s.eyebrow.split(' ')[0]} className="group min-h-[280px] lg:min-h-full" sizes="(min-width: 1024px) 45vw, 100vw" />
           <div className="px-5 py-16 sm:px-12 lg:py-20">
             <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold uppercase tracking-[0.12em] text-gold-dark">
               {s.audiences.map((a) => (
@@ -35,7 +35,7 @@ export function ServicePage({ slug }: { slug: Service['slug'] }) {
             </ul>
             <div className="mt-10 space-y-10">
               {s.sections.map((sec) => (
-                <div key={sec.title} className="border-t border-line pt-6">
+                <div key={sec.title} className="reveal border-t border-line pt-6">
                   <h2 className="font-heading text-3xl font-semibold uppercase text-navy">{sec.title}</h2>
                   <p className="mt-3 max-w-xl leading-8 text-ink/85">{sec.body}</p>
                 </div>

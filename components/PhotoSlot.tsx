@@ -26,7 +26,7 @@ export function PhotoSlot({
   if (photo) {
     return (
       <figure className={`${className.includes('absolute') ? '' : 'relative'} overflow-hidden bg-navy ${className}`}>
-        <Image src={small ? smallSrc(photo.src) : photo.src} alt={photo.alt} fill priority={priority} sizes={sizes} className="object-cover" />
+        <Image src={small ? smallSrc(photo.src) : photo.src} alt={photo.alt} fill priority={priority} sizes={sizes} className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.06]" />
         {rings && <div aria-hidden="true" className={`photo-rings ${small ? 'photo-rings-sm' : ''}`} />}
         {photo.credit && !small && (
           <figcaption className={`absolute ${creditTop ? 'top-2' : 'bottom-2'} right-3 z-10 text-[0.65rem] text-white/70 [text-shadow:0_1px_2px_rgb(0_0_0/0.6)]`}>{photo.credit}</figcaption>

@@ -82,7 +82,7 @@ export default function HomePage() {
       {/* Group travel */}
       <section className="bg-surface">
         <div className="mx-auto grid max-w-site items-stretch lg:grid-cols-2">
-          <PhotoSlot photo={groupsPhoto} label="Groups" className="min-h-[320px] lg:min-h-[560px]" sizes="(min-width: 1024px) 50vw, 100vw" />
+          <PhotoSlot photo={groupsPhoto} label="Groups" className="group min-h-[320px] lg:min-h-[560px]" sizes="(min-width: 1024px) 50vw, 100vw" />
           <div className="flex flex-col justify-center px-5 py-16 sm:px-12 lg:py-24">
             <SectionHeading
               eyebrow="Group travel"
@@ -114,7 +114,7 @@ export default function HomePage() {
         <SectionHeading tone="light" eyebrow="How it works" title="Discover. Plan. Experience." />
         <ol className="mt-12 grid gap-10 md:grid-cols-3">
           {howItWorks.map((s) => (
-            <li key={s.n} className="border-t border-white/20 pt-6">
+            <li key={s.n} className="reveal border-t border-white/20 pt-6">
               <p className="font-heading text-5xl font-semibold text-gold">{s.n}</p>
               <h3 className="mt-4 font-heading text-3xl font-semibold uppercase">{s.title}</h3>
               <p className="mt-2 text-lg text-white">{s.lead}</p>

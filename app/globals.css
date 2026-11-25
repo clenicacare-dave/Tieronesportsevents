@@ -104,6 +104,24 @@
     -webkit-mask-image: radial-gradient(circle at 88% 115%, #000 20%, transparent 85%);
     mask-image: radial-gradient(circle at 88% 115%, #000 20%, transparent 85%);
   }
+  .photo-rings {
+    transform-origin: 88% 115%;
+    transition: transform 900ms ease-out, opacity 900ms ease-out;
+    opacity: 0.85;
+  }
+  /* Hovering a card or panel spreads its rings outward. */
+  .group:hover .photo-rings {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+  /* Larger photo panels: rings breathe very slowly. */
+  .photo-rings:not(.photo-rings-sm) {
+    animation: rings-drift 14s ease-in-out infinite;
+  }
+  @keyframes rings-drift {
+    0%, 100% { scale: 1; }
+    50% { scale: 1.05; }
+  }
   .photo-rings-sm {
     background-image: repeating-radial-gradient(circle at 88% 115%, transparent 0 26px, rgb(var(--color-gold) / 0.22) 26px 27px);
   }
@@ -154,6 +172,20 @@
   }
   .prose-t1 a {
     @apply font-medium text-navy underline decoration-gold decoration-2 underline-offset-4;
+  }
+}
+
+/* Panels rise a fifth of their height and fade in as they scroll into view (browsers with scroll-driven
+   animations: Chrome, Edge, Safari 26). Others simply show them. Off for prefers-reduced-motion. */
+@supports (animation-timeline: view()) {
+  .reveal {
+    animation: reveal-up linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 22%;
+  }
+  @keyframes reveal-up {
+    from { opacity: 0; translate: 0 20%; }
+    to { opacity: 1; translate: 0 0; }
   }
 }
 

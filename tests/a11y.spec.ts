@@ -6,6 +6,8 @@ const pages = ['/', '/events', '/events/cheltenham-festival', '/sports/rugby', '
 
 for (const path of pages) {
   test(`${path} has no automatically detectable WCAG A/AA violations`, async ({ page }) => {
+    // Check the finished state: scroll-in animations would otherwise be measured half-faded.
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto(path);
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
