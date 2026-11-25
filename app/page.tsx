@@ -12,9 +12,9 @@ export default function HomePage() {
     <>
       {/* Hero */}
       <section className="relative isolate overflow-hidden bg-navy text-white">
-        {/* Layers: stadium photo as a faint texture, navy-to-gold glow, fine rings from the badge. */}
-        <PhotoSlot photo={heroPhoto} rings={false} priority sizes="100vw" className="absolute inset-0 -z-30 opacity-[0.22] mix-blend-luminosity" />
-        <div className="hero-glow absolute inset-0 -z-20 opacity-[0.9]" />
+        {/* Layers: stadium photo, navy wash (solid behind the text, lighter on the right) with a gold glow, fine rings from the badge. */}
+        <PhotoSlot photo={heroPhoto} rings={false} priority sizes="100vw" className="absolute inset-0 -z-30" />
+        <div className="hero-glow absolute inset-0 -z-20" />
         <div
           aria-hidden="true"
           className="pointer-events-none absolute right-[-150px] top-1/2 -z-10 w-[300px] -translate-y-1/2 sm:right-[-70px] sm:w-[380px] lg:right-[6%] lg:w-[420px]"

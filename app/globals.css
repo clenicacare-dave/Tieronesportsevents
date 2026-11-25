@@ -47,10 +47,10 @@
   }
   /* Home hero (the approved look): deep navy shading into a warm gold glow behind the badge. */
   .hero-glow {
-    background-color: rgb(var(--color-navy));
     background-image:
-      radial-gradient(circle at 80% 50%, rgb(var(--color-gold) / 0.16), transparent 45%),
-      linear-gradient(165deg, rgb(var(--color-navy) / 0.9) 40%, rgb(15 26 38 / 0.95));
+      radial-gradient(circle at 80% 50%, rgb(var(--color-gold) / 0.18), transparent 45%),
+      linear-gradient(90deg, rgb(var(--color-navy) / 0.97) 25%, rgb(var(--color-navy) / 0.72) 55%, rgb(var(--color-navy) / 0.5) 100%),
+      linear-gradient(180deg, rgb(15 26 38 / 0.35), transparent 30%, transparent 70%, rgb(15 26 38 / 0.55));
   }
   /* Fine gold lines across the whole hero, centred on the badge, breathing very slowly. */
   .hero-rings-anim {
