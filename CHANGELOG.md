@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.1 — Fix event and sport pages on Cloudflare (2026-11-25)
+
+- Pre-rendered event and sport pages returned 404 on Workers: OpenNext now serves pre-built pages from static assets (no R2 or KV).
+- TypeScript module resolution set to `bundler`.
+- Tests can run against a deployed URL: `BASE_URL=https://… npm test`.
+
 ## 0.2.0 — Phase 1 website (2026-11-25)
 
 - New site from the Tier One starter pack: navy-and-gold design system, supplied T1 badge unchanged.
