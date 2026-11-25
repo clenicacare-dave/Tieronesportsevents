@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0 — Photography (2026-11-25)
+
+- 11 free Unsplash photos (hero, five sports, three services, two events), credited, with sources in `content/photos.ts`.
+- Card-sized 960px versions for listings; full-size 2000–2400px for heroes. All WebP, 14–281 KB.
+- Sport pages get photo headers; events fall back to their sport's photo.
+
 ## 0.2.1 — Fix event and sport pages on Cloudflare (2026-11-25)
 
 - Pre-rendered event and sport pages returned 404 on Workers: OpenNext now serves pre-built pages from static assets (no R2 or KV).
