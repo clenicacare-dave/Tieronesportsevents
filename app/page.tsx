@@ -15,7 +15,7 @@ export default function HomePage() {
         {/* Layers: stadium photo, navy wash, gold rings radiating from the badge (both gently animated). */}
         {heroPhoto ? (
           <>
-            <PhotoSlot photo={heroPhoto} priority sizes="100vw" className="absolute inset-0 -z-30" />
+            <PhotoSlot photo={heroPhoto} rings={false} priority sizes="100vw" className="absolute inset-0 -z-30" />
             <div className="absolute inset-0 -z-20 bg-gradient-to-r from-navy via-navy/80 to-navy/35" />
           </>
         ) : (

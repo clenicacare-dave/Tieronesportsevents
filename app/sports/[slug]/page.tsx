@@ -24,8 +24,9 @@ export default async function SportPage({ params }: Props) {
   return (
     <>
       <section className="relative isolate overflow-hidden bg-navy text-white">
-        <PhotoSlot photo={sport.photo} priority sizes="100vw" className="absolute inset-0 -z-10" />
+        <PhotoSlot photo={sport.photo} rings={false} priority sizes="100vw" className="absolute inset-0 -z-10" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-navy via-navy/85 to-navy/25" />
+        <div aria-hidden="true" className="photo-rings -z-10" />
         <div className="relative mx-auto max-w-site px-5 pb-16 pt-12 sm:px-8 sm:pb-20 sm:pt-16">
           <Breadcrumbs items={[{ href: '/sports', label: 'Sports' }, { label: sport.name }]} />
           <Eyebrow tone="light">{sport.name}</Eyebrow>
