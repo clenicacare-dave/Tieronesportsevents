@@ -3,6 +3,7 @@ import type { Sport, SportSlug } from './types';
 export const sports: Sport[] = [
   {
     slug: 'football',
+    tile: { title: 'Football weekends', line: 'UK and European matchday experiences.' },
     name: 'Football',
     headline: 'Football weekends and club tours',
     summary: 'Matchday weekends in the UK and Europe, and tours built around your own squad.',
@@ -16,6 +17,7 @@ export const sports: Sport[] = [
   },
   {
     slug: 'rugby',
+    tile: { title: 'Rugby experiences', line: 'International and club rugby.' },
     name: 'Rugby',
     headline: 'International and club rugby',
     summary: 'International weekends and club rugby travel for supporters and groups.',
@@ -29,6 +31,7 @@ export const sports: Sport[] = [
   },
   {
     slug: 'motorsport',
+    tile: { title: 'Grand Prix travel', line: 'Iconic racing destinations.' },
     name: 'Motorsport',
     headline: 'Grand Prix travel',
     summary: 'Race weekends at iconic circuits, planned around the full event.',
@@ -38,6 +41,7 @@ export const sports: Sport[] = [
   },
   {
     slug: 'golf',
+    tile: { title: 'Golf experiences', line: 'Tournament and group travel.' },
     name: 'Golf',
     headline: 'Golf breaks and tournament travel',
     summary: 'Tournament travel and golf breaks for friends, societies and corporate groups.',
@@ -47,6 +51,7 @@ export const sports: Sport[] = [
   },
   {
     slug: 'racing',
+    tile: { title: 'Racing festivals', line: 'The big festivals in Ireland and the UK.' },
     name: 'Racing',
     headline: 'Festival racing',
     summary: 'The big racing festivals in Ireland and the UK, with travel and stays arranged.',

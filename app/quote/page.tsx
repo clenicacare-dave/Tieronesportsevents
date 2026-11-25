@@ -29,7 +29,9 @@ export default function QuotePage() {
             {howItWorks.map((s) => (
               <li key={s.n} className="border-t border-line pt-5">
                 <p className="font-heading text-3xl font-semibold text-gold-dark">{s.n}</p>
-                <h2 className="mt-1 font-heading text-2xl font-semibold uppercase text-navy">{s.title}</h2>
+                <h2 className="mt-1 font-heading text-2xl font-semibold uppercase text-navy">
+                  {s.title}. <span className="text-ink/80">{s.lead}</span>
+                </h2>
                 <p className="mt-2 leading-7 text-ink/85">{s.body}</p>
               </li>
             ))}

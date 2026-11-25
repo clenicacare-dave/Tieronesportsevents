@@ -17,8 +17,8 @@ export default function EventsPage() {
     <>
       <PageHero
         eyebrow="Events"
-        title="Find your next sporting experience"
-        intro="Matchdays, race weekends and festivals, with the travel and the stay planned around the occasion."
+        title="Matchdays, race weekends and festivals"
+        intro="The travel and the stay, planned around the occasion."
       />
       <Section>
         <nav aria-label="Filter by sport" className="flex flex-wrap gap-x-6 gap-y-2 border-b border-line pb-4 text-sm font-semibold">

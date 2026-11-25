@@ -11,6 +11,8 @@ export type SportSlug = 'football' | 'rugby' | 'motorsport' | 'golf' | 'racing';
 export interface Sport {
   slug: SportSlug;
   name: string;
+  // Short title and line for category tiles (from the starter-pack prototype).
+  tile: { title: string; line: string };
   headline: string;
   summary: string;
   intro: string;

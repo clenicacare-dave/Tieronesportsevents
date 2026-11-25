@@ -5,9 +5,9 @@ export const heroPhoto: Photo | undefined = undefined;
 export const groupsPhoto: Photo | undefined = undefined;
 
 export const howItWorks = [
-  { n: '01', title: 'Tell us the occasion', body: 'The sport, the event or the idea, who is travelling and roughly when.' },
-  { n: '02', title: 'Get options in writing', body: 'We come back with travel, accommodation and what is included, set out clearly.' },
-  { n: '03', title: 'Confirm and travel', body: 'Nothing is booked until you confirm. Then we look after the details.' }
+  { n: '01', title: 'Discover', lead: 'Find your event.', body: 'The sport, the event or the idea, who is travelling and roughly when.' },
+  { n: '02', title: 'Plan', lead: 'Tell us what you need.', body: 'We come back with travel, accommodation and what is included, set out clearly in writing.' },
+  { n: '03', title: 'Experience', lead: 'Enjoy the occasion.', body: 'Nothing is booked until you confirm. Then we look after the details.' }
 ];
 
 // How Tier One works. These are commitments about process, not awards or accreditations.

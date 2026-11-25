@@ -116,14 +116,18 @@ export function EventCard({ event }: { event: TravelEvent }) {
   );
 }
 
-export function SportCard({ sport }: { sport: Sport }) {
+export function SportCard({ sport, index }: { sport: Sport; index?: number }) {
   return (
     <Link href={`/sports/${sport.slug}`} className="group relative block overflow-hidden bg-navy text-white">
       <PhotoSlot photo={sport.photo} className="aspect-[3/4] transition duration-500 group-hover:scale-[1.03] sm:aspect-[4/5]" />
       <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/30 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 p-6">
-        <h3 className="font-heading text-3xl font-semibold uppercase leading-none">{sport.name}</h3>
-        <p className="mt-2 text-sm leading-6 text-white/80">{sport.summary}</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold">
+          {index !== undefined && `${String(index + 1).padStart(2, '0')} / `}
+          {sport.name}
+        </p>
+        <h3 className="mt-2 font-heading text-3xl font-semibold uppercase leading-none">{sport.tile.title}</h3>
+        <p className="mt-2 text-sm leading-6 text-white/80">{sport.tile.line}</p>
         <span className="mt-4 inline-block h-[2px] w-10 bg-gold transition-all group-hover:w-16" />
       </div>
     </Link>

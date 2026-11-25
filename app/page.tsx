@@ -5,7 +5,6 @@ import { featuredEvents } from '@/content/events';
 import { sports } from '@/content/sports';
 import { groupsPhoto, heroPhoto, howItWorks, promises } from '@/content/home';
 import { brand } from '@/brand/brand';
-import { site } from '@/lib/site';
 
 export default function HomePage() {
   const featured = featuredEvents();
@@ -32,7 +31,7 @@ export default function HomePage() {
           </div>
         )}
         <div className="mx-auto flex min-h-[78svh] max-w-site flex-col justify-end px-5 pb-16 pt-24 sm:px-8 sm:pb-24 lg:min-h-[640px]">
-          <Eyebrow tone="light">Sports travel from {site.regions}</Eyebrow>
+          <Eyebrow tone="light">Experience sport differently</Eyebrow>
           <h1 className="mt-5 max-w-4xl font-heading text-[3.4rem] lg:max-w-[56%] font-semibold uppercase leading-[0.9] sm:text-8xl">{brand.tagline}</h1>
           <p className="mt-6 max-w-xl text-lg leading-8 text-white/85 sm:text-xl">{brand.strapline}</p>
           <div className="mt-9 flex flex-wrap gap-3">
@@ -49,14 +48,14 @@ export default function HomePage() {
       {/* Sports */}
       <Section>
         <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
-          <SectionHeading eyebrow="Sports" title="Pick your occasion" />
+          <SectionHeading eyebrow="Sports" title="Find your next sporting experience" />
           <Link href="/sports" className="font-semibold text-navy underline decoration-gold decoration-2 underline-offset-8">
             All sports
           </Link>
         </div>
         <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-5">
-          {sports.map((s) => (
-            <SportCard key={s.slug} sport={s} />
+          {sports.map((s, i) => (
+            <SportCard key={s.slug} sport={s} index={i} />
           ))}
         </div>
       </Section>
@@ -112,13 +111,14 @@ export default function HomePage() {
 
       {/* How it works */}
       <Section tone="navy">
-        <SectionHeading tone="light" eyebrow="How it works" title="Three steps to the stands" />
+        <SectionHeading tone="light" eyebrow="How it works" title="Discover. Plan. Experience." />
         <ol className="mt-12 grid gap-10 md:grid-cols-3">
           {howItWorks.map((s) => (
             <li key={s.n} className="border-t border-white/20 pt-6">
               <p className="font-heading text-5xl font-semibold text-gold">{s.n}</p>
-              <h3 className="mt-4 font-heading text-2xl font-semibold uppercase">{s.title}</h3>
-              <p className="mt-3 leading-7 text-white/75">{s.body}</p>
+              <h3 className="mt-4 font-heading text-3xl font-semibold uppercase">{s.title}</h3>
+              <p className="mt-2 text-lg text-white">{s.lead}</p>
+              <p className="mt-3 leading-7 text-white/70">{s.body}</p>
             </li>
           ))}
         </ol>

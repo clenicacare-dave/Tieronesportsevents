@@ -14,8 +14,8 @@ export default function SportsPage() {
       <PageHero eyebrow="Sports" title="Every sport, one approach" intro="Whatever the occasion, we plan the travel around the event and the people going." />
       <Section>
         <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
-          {sports.map((s) => (
-            <SportCard key={s.slug} sport={s} />
+          {sports.map((s, i) => (
+            <SportCard key={s.slug} sport={s} index={i} />
           ))}
         </div>
       </Section>
