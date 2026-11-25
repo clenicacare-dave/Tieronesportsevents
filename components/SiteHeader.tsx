@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Logo } from './Logo';
+import { HeaderClock } from './HeaderClock';
 import { mainNav } from '@/lib/nav';
 
 export function SiteHeader() {
@@ -34,10 +35,13 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-3">
+          {/* Phones and tablets: date and time fill the space the old Menu button used. */}
+          <div className="xl:hidden">
+            <HeaderClock />
+          </div>
           <Link href="/quote" className="btn-gold hidden xl:inline-flex">
             Request a quote
           </Link>
-
         </div>
       </div>
     </header>
