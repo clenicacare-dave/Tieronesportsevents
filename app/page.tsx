@@ -53,9 +53,10 @@ export default function HomePage() {
             All sports
           </Link>
         </div>
-        <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-5">
+        {/* Phones and tablets: a sideways-swipe row; wide screens: five across. */}
+        <div className="-mx-5 mt-10 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-3 [scrollbar-width:none] sm:-mx-8 sm:gap-4 sm:px-8 xl:mx-0 xl:grid xl:grid-cols-5 xl:overflow-visible xl:px-0 xl:pb-0">
           {sports.map((s, i) => (
-            <SportCard key={s.slug} sport={s} index={i} />
+            <SportCard key={s.slug} sport={s} index={i} className="w-[72vw] max-w-[300px] shrink-0 snap-start xl:w-auto xl:max-w-none" />
           ))}
         </div>
       </Section>

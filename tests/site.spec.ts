@@ -52,6 +52,13 @@ test('visitor goes from home to an event and lands on a pre-filled quote form', 
   await expect(page.getByRole('button', { name: 'Send quote request' })).toBeVisible();
 });
 
+test('sport tile Quote button opens the quote form with that sport selected', async ({ page }) => {
+  await page.goto('/sports');
+  await page.getByRole('link', { name: 'Quote for golf' }).click();
+  await expect(page).toHaveURL(/\/quote\?event=golf/);
+  await expect(page.locator('select[name="interest"]')).toHaveValue('Golf (any event)');
+});
+
 test('sample events are labelled and kept out of search', async ({ page, request }) => {
   await page.goto('/events/british-grand-prix-weekend');
   await expect(page.getByText('Sample', { exact: true }).first()).toBeVisible();
