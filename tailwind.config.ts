@@ -1,30 +1,30 @@
 import type { Config } from 'tailwindcss';
 
+// All values come from brand/tokens.css so the brand can change without touching components.
+const token = (name: string) => `rgb(var(--color-${name}) / <alpha-value>)`;
+
 const config: Config = {
-  content: [
-    './app/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './pages/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}'
-  ],
+  content: ['./app/**/*.{ts,tsx}', './components/**/*.{ts,tsx}', './content/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        tierNavy: '#172437',
-        tierInk: '#111722',
-        tierGold: '#e8c777',
-        tierGoldMuted: '#b9a16d',
-        tierStone: '#7a705f',
-        tierMist: '#f5f2ea'
+        navy: token('navy'),
+        ink: token('ink'),
+        gold: token('gold'),
+        'gold-dark': token('gold-dark'),
+        surface: token('surface'),
+        muted: token('muted'),
+        line: token('line')
       },
-      keyframes: {
-        'float-pulse': {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-8px)' }
-        }
+      fontFamily: {
+        heading: ['var(--font-heading-stack)'],
+        body: ['var(--font-body-stack)']
       },
-      animation: {
-        'pulse-slow': 'float-pulse 3s ease-in-out infinite'
+      borderRadius: {
+        brand: 'var(--radius)'
+      },
+      maxWidth: {
+        site: '76rem'
       }
     }
   },

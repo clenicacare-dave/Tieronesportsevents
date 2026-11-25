@@ -1,0 +1,127 @@
+# Tier One Sports Events: project documentation
+
+One file for roadmap, architecture and decisions, security and risk, costs and data, open decisions and handover.
+Brief: `docs/brand-pack/prompts/CLAUDE.md`. Brand pack: `docs/brand-pack/`.
+
+## 1. Scope: Phase 1 (built)
+
+### Sitemap
+
+| Path | Purpose |
+| --- | --- |
+| `/` | Hero, sports, featured events, group travel, how it works, trust, enquiry call to action |
+| `/events`, `/events/[slug]` | Event list and detail (venue, dates, package, accommodation, transport, inclusions, exclusions, availability, notices, enquiry) |
+| `/sports`, `/sports/[slug]` | Football, rugby, motorsport, golf, racing, each with its events |
+| `/group-travel`, `/corporate-hospitality`, `/bespoke-trips` | Service pages from `content/services.ts` |
+| `/about`, `/how-it-works`, `/faqs`, `/travel-information` | Information |
+| `/contact`, `/quote` | Contact form and quote request (`/quote?event=slug` pre-selects the event) |
+| `/privacy`, `/cookies`, `/terms` | Draft legal pages, marked for legal review |
+
+Testimonials and case studies are left out: none are genuine yet.
+
+### Main journeys
+
+1. **Browse to enquiry:** home → event (or sport → event) → "Enquire about this trip" → quote form pre-filled → sent to info@.
+2. **Group organiser:** home → group travel → request a quote with group type and size.
+3. **Corporate:** corporate hospitality → request a quote.
+4. **Idea not listed:** bespoke trips or "Not listed? Ask us" → quote with "Something else".
+
+### Acceptance criteria (Phase 1)
+
+| Criterion | Status |
+| --- | --- |
+| All pages above render on mobile and desktop | Automated (Playwright, Pixel 7 and 1366px) |
+| One `h1`, title and canonical URL on every page | Automated |
+| No automatically detectable WCAG 2.2 A/AA violations | Automated (axe); manual keyboard and screen-reader pass still to do |
+| Event → quote journey pre-fills the event | Automated |
+| Sample content visibly labelled, noindex, out of sitemap, no event structured data | Automated |
+| Security headers on every response | Automated |
+| Enquiry reaches info@ | Verified live on 25 Nov 2026 (previous form); re-test after deploy |
+| No invented prices, availability, testimonials or accreditation | Content review: prices absent, availability "Enquire", promises are process commitments only |
+| Logo, colours and fonts replaceable without redesign | `brand/`, `public/brand/`, `app/layout.tsx` |
+
+### Assumptions
+
+- The domain is **www.tieronesportsevents.com** (live). `tieronesportsevents.ie` was not registered on 25 Nov 2026; switching is one value in `lib/site.ts`, plus DNS and a Worker route.
+- **Enquiries stay on.** The brief says to keep submission disabled until secure handling is approved; the existing form (Turnstile, honeypot, rate limit, consent, length limits, sent only to info@ and stored nowhere else) was already live and approved by the business. `site.enquiriesEnabled` turns it off in one line.
+- The supplied HTML prototype was used as a reference only; the site stays on the existing Next.js/React codebase (the brief prefers reusing a suitable stack over migrating).
+- Sample events use real event names and venues for realism, but are labelled and state that they are not available packages.
+
+## 2. Architecture and decisions
+
+- **Next.js 15 on Cloudflare Workers (OpenNext).** Kept rather than moving to Astro: already deployed and working, the team knows React, and every page is pre-rendered anyway, so the cost and speed are the same as a static site.
+- **Content as typed TypeScript in `content/`.** No CMS or database until someone non-technical needs to edit weekly. Typed data catches missing fields at build time.
+- **Brand in three places only:** `brand/brand.ts` (names, logo paths), `brand/tokens.css` (colours, radius, fonts as CSS variables Tailwind reads), `public/brand/` (files).
+- **Logo lockup is the badge plus live text.** The supplied SVG lockups embed a 300 KB PNG; the header uses a 4 KB WebP badge and text in the brand font. The badge artwork is unchanged.
+- **Fonts self-hosted** via `next/font` (Barlow Condensed, Inter; OFL). Downloaded at build time; visitors never contact Google.
+- **Images unoptimised by Next** (Cloudflare Images would cost money). Add photos pre-sized as WebP: hero 2400×1000, cards 1200×900.
+- **No analytics or cookies**, so no consent banner. Cloudflare Web Analytics (cookieless, free) can be added later if wanted.
+- **Photography:** none supplied or licensed. Every photo slot (`photo` on events, sports, services, `content/home.ts`) falls back to a navy-and-gold stadium-lines motif.
+
+## 3. Security and risk
+
+| Control | Where |
+| --- | --- |
+| Bot protection | Cloudflare Turnstile, verified server-side |
+| Spam | Honeypot field, per-IP rate limit (best effort, per Worker instance) |
+| Input validation | Required fields, email format, length limits, line breaks stripped from header-bound fields, HTML escaped in emails |
+| Data minimisation | Only contact details and trip basics; nothing stored on the site; emails go to info@ only |
+| Headers | CSP (self + Turnstile only), HSTS, `X-Frame-Options: DENY`, nosniff, referrer and permissions policies, no `X-Powered-By` |
+| Secrets | Worker secrets (`TURNSTILE_SECRET`, `CONTACT_FORM_TO`); none in the repo |
+| CI | Lint, typecheck, build, tests on every pull request |
+
+**Known risks**
+
+| Risk | Mitigation / owner |
+| --- | --- |
+| CSP allows inline scripts (Next.js bootstrap) | Acceptable for a static content site with no user content; nonce-based CSP would force dynamic rendering |
+| Rate limit is per Worker instance | Turnstile is the main control; add a Cloudflare rate-limiting rule if abuse appears |
+| `npm audit`: 15 advisories in build-time tools (ESLint 8, Tailwind 3 chain) | Not shipped to the Worker. Fix with an ESLint 9 / Tailwind 4 upgrade as its own change |
+| Customer acknowledgement email not sent on the free Workers plan | Enquiry still arrives; decision below |
+| Legal pages are drafts | Independent legal review before commercial operation |
+| No incident response plan | Business to name a contact; Cloudflare dashboard access for two people |
+
+## 4. Costs and data inventory
+
+Verify current terms before relying on these.
+
+| Service | Use | Expected cost |
+| --- | --- | --- |
+| Cloudflare Workers (Tier One account) | Hosting | Free plan (request quota per day applies) |
+| Cloudflare Email Sending | Enquiry email to info@ | Free plan: verified destinations only |
+| Cloudflare Turnstile | Bot check | Free |
+| Cloudflare DNS | DNS | Free |
+| Blacknight | Domain registration | Annual renewal |
+| Zoho Mail Free | info@ mailbox | Free |
+| GitHub | Code, CI | Free tier (Actions minutes limited on private repos) |
+
+| Personal data | Collected via | Stored | Retention |
+| --- | --- | --- | --- |
+| Name, email, phone (optional), enquiry details | Contact and quote forms | Zoho mailbox (info@) only | To be decided (privacy notice placeholder) |
+| IP address | Turnstile, rate limit | Not stored by the site; Cloudflare processes it | Cloudflare's terms |
+
+## 5. Roadmap (not built)
+
+- **Phase 2, enquiries and operations:** guided enquiry wizard, quote preparation, references, acknowledgements, lead tracking, communication history, catalogue admin, reminders, conversion reports. Likely needs D1 and authentication; justify before adding.
+- **Phase 3, customer services:** group-leader portal, participant registration, documents, itineraries, notifications, fixture-change handling, feedback. AI optional, never to confirm availability, price or contracts.
+- **Phase 4, financial services:** hosted payments, deposits, instalments, refunds. Requires explicit approval and commercial, legal and security review (package travel, insolvency protection, consumer rights, GDPR). Never store card details.
+
+## 6. Open business decisions
+
+1. **Domain:** register `tieronesportsevents.ie`, and if so, which is primary?
+2. **Enquiries:** confirm the live form is approved "secure handling", or switch it off until Phase 0 governance is done.
+3. **Customer acknowledgement email:** accept none, or upgrade the Cloudflare account to Workers Paid.
+4. **Photography:** budget and source for licensed images (hero, five sports, three services, each event).
+5. **Real events:** which events, dates, inclusions and prices to publish; who confirms them.
+6. **Legal:** entity name, registration, lawful basis, retention period, booking terms, package travel obligations and bonding; independent legal review.
+7. **About page:** company details, people and story.
+8. **FAQ answers:** confirm drafts; add payment and cancellation answers once policies exist.
+9. **Typography and palette:** confirm or replace the provisional choices; request vector logo artwork.
+10. **Governance (Phase 0):** ownership, change approval, maintenance, support and exit arrangements.
+
+## 7. Handover
+
+- **Accounts (business-owned):** Cloudflare account `017c00b8853e00499d11447187100220` (dave@tieronesportsevents.com), GitHub `clenicacare-dave/Tieronesportsevents`, Blacknight (domain), Zoho (mail).
+- **Deploy:** see README. Preview with `opennextjs-cloudflare upload`; go live with `wrangler deploy`.
+- **Change content:** edit `content/*.ts`, run `npm run check`, open a pull request; CI must pass.
+- **DNS:** Zoho MX, SPF, DKIM and DMARC records at the apex must not be changed. Email Sending uses the `mail.` subdomain. History in `docs/DNS-MIGRATION.md`.

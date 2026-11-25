@@ -1,0 +1,25 @@
+import type { Metadata } from 'next';
+import { CtaBand, PageHero, Section, SportCard } from '@/components/ui';
+import { sports } from '@/content/sports';
+
+export const metadata: Metadata = {
+  title: 'Sports',
+  description: 'Football, rugby, motorsport, golf and racing travel from Ireland and the UK.',
+  alternates: { canonical: '/sports' }
+};
+
+export default function SportsPage() {
+  return (
+    <>
+      <PageHero eyebrow="Sports" title="Every sport, one approach" intro="Whatever the occasion, we plan the travel around the event and the people going." />
+      <Section>
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
+          {sports.map((s) => (
+            <SportCard key={s.slug} sport={s} />
+          ))}
+        </div>
+      </Section>
+      <CtaBand title="Another sport in mind?" body="Tennis, GAA, cricket, athletics or something else entirely: tell us and we will see what is possible." />
+    </>
+  );
+}

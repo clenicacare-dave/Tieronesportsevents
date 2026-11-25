@@ -1,15 +1,18 @@
 {
   "name": "tier-one-sports-events",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "ESLINT_USE_FLAT_CONFIG=false eslint . --ext .ts,.tsx",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "playwright test",
+    "check": "npm run lint && npm run typecheck && npm run build && npm test"
   },
   "dependencies": {
     "autoprefixer": "^10.4.19",
@@ -20,7 +23,9 @@
     "tailwindcss": "^3.4.3"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.1",
     "@opennextjs/cloudflare": "^1.20.18",
+    "@playwright/test": "^1.65.1",
     "@types/node": "^20.12.7",
     "@types/react": "^19.3.1",
     "@types/react-dom": "^19.3.0",

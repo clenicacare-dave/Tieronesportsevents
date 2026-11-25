@@ -1,0 +1,21 @@
+/*
+ * Tier One design tokens: the only place colours, fonts and radii are defined.
+ * Palette from docs/brand-pack/branding/theme.md (Direction A, "Premium Matchday"); provisional.
+ * Colours are RGB channels so Tailwind can apply opacity (bg-navy/80).
+ * Fonts are loaded in app/layout.tsx via next/font and exposed as --font-heading / --font-body.
+ */
+:root {
+  --color-navy: 29 46 63; /* #1D2E3F deep navy */
+  --color-ink: 24 40 56; /* #182838 body text */
+  --color-gold: 217 183 108; /* #D9B76C champagne gold: buttons, accents on navy */
+  --color-gold-dark: 128 96 37; /* #806025 gold text on light backgrounds (AA) */
+  --color-surface: 247 245 240; /* #F7F5F0 warm off-white */
+  --color-white: 255 255 255;
+  --color-muted: 83 98 115; /* #536273 secondary text */
+  --color-line: 221 216 206; /* #DDD8CE borders */
+
+  --font-heading-stack: var(--font-heading), 'Arial Narrow', sans-serif;
+  --font-body-stack: var(--font-body), system-ui, sans-serif;
+
+  --radius: 4px;
+}

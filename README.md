@@ -1,45 +1,57 @@
 # Tier One Sports Events
 
-Next.js App Router site on Cloudflare Workers. The contact form is protected by Cloudflare Turnstile and emails enquiries through Cloudflare Email Service.
+Website for Tier One Sports Events: sports travel for supporters, families, clubs and corporate groups from Ireland and the UK.
+Live at https://www.tieronesportsevents.com.
 
-## Tech stack
+**Phase 1** (this release): a content-led site with events, sports, group, corporate and bespoke travel, information pages, draft legal pages and an enquiry/quote form. No bookings, payments or accounts.
 
-- [Next.js 14 App Router](https://nextjs.org/docs/app)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- Cloudflare Workers (via OpenNext), Email Service and Turnstile
+Full project documentation (architecture, decisions, security, costs, data, roadmap, open decisions, handover): [docs/PROJECT.md](docs/PROJECT.md). Changes: [CHANGELOG.md](CHANGELOG.md).
 
-## Getting started
+## Stack
+
+Next.js 15 (App Router, React 19, TypeScript, Tailwind) on Cloudflare Workers via OpenNext. Every page is pre-rendered; only `/api/contact` runs code. Enquiries use Cloudflare Turnstile and Cloudflare Email Sending to `info@` (Zoho).
+
+## Where things live
+
+| What | Where |
+| --- | --- |
+| Logo files, icons | `public/brand/` (originals in `docs/brand-pack/`) |
+| Brand name, logo paths, tagline | `brand/brand.ts` |
+| Colours, fonts, radius | `brand/tokens.css` (Tailwind reads these) |
+| Domain, contact email, enquiry switch, sample labels | `lib/site.ts` |
+| Events | `content/events.ts` |
+| Sports, services, FAQs, home copy | `content/*.ts` |
+| Photos | add WebP files to `public/photos/` and set `photo` on the event, sport or service |
+
+### Rebrand without a redesign
+
+1. Replace the files in `public/brand/` (keep the names, or update the paths in `brand/brand.ts`).
+2. Change colour values in `brand/tokens.css` and `themeColor` in `brand/brand.ts`.
+3. Change fonts in `app/layout.tsx` (two `next/font` lines).
+
+### Add or edit an event
+
+Edit `content/events.ts`. Each event has venue, dates, package, accommodation, transport, inclusions, exclusions, availability and notices.
+Set `sample: false` and `verified: true` only once every fact is confirmed. A confirmed `date.start` also turns on search-engine event data.
+
+## Develop
 
 ```bash
 npm install
-npm run dev
+npm run dev          # http://localhost:3000
+npm run check        # lint, typecheck, build, Playwright tests (desktop + mobile, incl. accessibility)
 ```
 
-The site runs at `http://localhost:3000`. The landing page lives at `/` and the contact form is available at `/contact`.
+Locally the tests use your installed Google Chrome; CI installs Chromium.
 
-## Environment variables
+## Deploy
 
-Create `.env.local` (Next.js will auto-load it) and set:
-
-- `CONTACT_FORM_TO` - Target address for new enquiries.
-- `CONTACT_FORM_FROM` - Sender on the onboarded Email Service domain (set in `wrangler.jsonc`).
-
-`CONTACT_FORM_TO` and `TURNSTILE_SECRET` are secrets on the Worker `tieronesportsevents`. `NEXT_PUBLIC_TURNSTILE_SITE_KEY` is public and lives in `.env.production`.
-
-## Deployment
+The repo folder is bound to Tier One's own Cloudflare account (wrangler profile `tierone`).
 
 ```bash
-npm run build
-npm start
+npx opennextjs-cloudflare build
+npx opennextjs-cloudflare upload   # preview version, not live
+npx wrangler deploy                # live
 ```
 
-Hosted on Cloudflare Workers via OpenNext. `npm run deploy` builds and deploys; `npm run preview` runs the Worker locally.
-
-## How to test the email flow
-
-1. Run `npm install`.
-2. Use `npm run preview` (the email binding only exists on Cloudflare).
-3. Start the dev server with `npm run dev`, open `http://localhost:3000/contact`, and submit the form (consent checkbox must be ticked).
-4. Confirm two emails arrive: the internal notification at `CONTACT_FORM_TO` and the customer confirmation at the address you entered.
-5. In production on Vercel, repeat the submission and verify the same flow through the destination inbox.
+Worker secrets: `TURNSTILE_SECRET`, `CONTACT_FORM_TO`. Public Turnstile site key: `.env.production`.
