@@ -25,7 +25,7 @@ export function SiteHeader() {
       <div className="mx-auto flex max-w-site items-center justify-between gap-6 px-5 py-3 sm:px-8">
         <Logo />
 
-        <nav aria-label="Main" className="hidden lg:block">
+        <nav aria-label="Main" className="hidden xl:block">
           <ul className="flex items-center gap-7 text-[0.95rem]">
             {mainNav.map((item) => (
               <li key={item.href}>
@@ -47,7 +47,7 @@ export function SiteHeader() {
           </Link>
 
           {/* Works without JavaScript */}
-          <details ref={menu} className="group relative lg:hidden">
+          <details ref={menu} className="group relative xl:hidden">
             <summary className="flex h-11 cursor-pointer list-none items-center gap-2 rounded-brand border border-white/25 px-3 text-sm font-semibold [&::-webkit-details-marker]:hidden">
               <span aria-hidden="true" className="relative block h-3.5 w-5 border-y-2 border-current after:absolute after:left-0 after:top-1 after:h-0.5 after:w-5 after:bg-current" />
               <span className="group-open:hidden">Menu</span>

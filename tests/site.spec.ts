@@ -62,6 +62,19 @@ test('sample events are labelled and kept out of search', async ({ page, request
   expect(sitemap).not.toContain('/events/british-grand-prix-weekend');
 });
 
+test('no page scrolls sideways and the hero badge stays on screen', async ({ page }) => {
+  for (const path of ['/', '/events', '/events/cheltenham-festival', '/sports/rugby', '/quote']) {
+    await page.goto(path);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+    expect(overflow, `${path} overflows by ${overflow}px`).toBeLessThanOrEqual(0);
+  }
+  await page.goto('/');
+  const badge = await page.locator('.hero-badge img').boundingBox();
+  const width = page.viewportSize()!.width;
+  expect(badge!.x).toBeGreaterThanOrEqual(0);
+  expect(badge!.x + badge!.width).toBeLessThanOrEqual(width);
+});
+
 test('unknown pages return 404', async ({ page }) => {
   const res = await page.goto('/no-such-page');
   expect(res?.status()).toBe(404);

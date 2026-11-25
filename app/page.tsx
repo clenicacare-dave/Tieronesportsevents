@@ -15,19 +15,21 @@ export default function HomePage() {
         {/* Layers: stadium photo, navy wash (solid behind the text, lighter on the right) with a gold glow, fine rings from the badge. */}
         <PhotoSlot photo={heroPhoto} rings={false} priority sizes="100vw" className="absolute inset-0 -z-30" />
         <div className="hero-glow absolute inset-0 -z-20" />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute right-[-150px] top-1/2 -z-10 w-[300px] -translate-y-1/2 sm:right-[-70px] sm:w-[380px] lg:right-[6%] lg:w-[420px]"
-        >
-          <div className="hero-rings-anim absolute left-1/2 top-1/2 aspect-square w-[700%] -translate-x-1/2 -translate-y-1/2" />
-          <div className="hero-badge relative opacity-30 sm:opacity-50 lg:opacity-100">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={brand.logo.badgeLarge} alt="" width={480} height={480} className="relative w-full drop-shadow-[0_20px_50px_rgba(0,0,0,0.55)]" />
+        <div className="mx-auto flex max-w-site flex-col px-5 pb-16 pt-12 sm:px-8 sm:pb-20 sm:pt-16 xl:min-h-[640px] xl:justify-end xl:pb-24 xl:pt-24">
+          {/* Badge: above the headline on phones and tablets, beside it on wide screens.
+              Its rings sit behind everything (-z-10 inside the section's stacking context). */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none relative mb-10 w-[150px] sm:mb-12 sm:w-[200px] xl:absolute xl:right-[6%] xl:top-1/2 xl:-z-10 xl:mb-0 xl:w-[420px] xl:-translate-y-1/2"
+          >
+            <div className="hero-rings-anim absolute left-1/2 top-1/2 -z-10 aspect-square w-[900%] -translate-x-1/2 -translate-y-1/2 xl:w-[700%]" />
+            <div className="hero-badge relative">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={brand.logo.badgeLarge} alt="" width={480} height={480} className="relative w-full drop-shadow-[0_20px_50px_rgba(0,0,0,0.55)]" />
+            </div>
           </div>
-        </div>
-        <div className="mx-auto flex min-h-[78svh] max-w-site flex-col justify-end px-5 pb-16 pt-24 sm:px-8 sm:pb-24 lg:min-h-[640px]">
           <Eyebrow tone="light">Experience sport differently</Eyebrow>
-          <h1 className="mt-5 max-w-4xl font-heading text-[3.4rem] lg:max-w-[56%] font-semibold uppercase leading-[0.9] sm:text-8xl">{brand.tagline}</h1>
+          <h1 className="mt-5 max-w-4xl font-heading text-[3.4rem] font-semibold xl:max-w-[56%] uppercase leading-[0.9] sm:text-8xl">{brand.tagline}</h1>
           <p className="mt-6 max-w-xl text-lg leading-8 text-white/85 sm:text-xl">{brand.strapline}</p>
           <div className="mt-9 flex flex-wrap gap-3">
             <Link href="/events" className="btn-gold">
