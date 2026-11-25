@@ -55,6 +55,7 @@ Testimonials and case studies are left out: none are genuine yet.
 - **Logo lockup is the badge plus live text.** The supplied SVG lockups embed a 300 KB PNG; the header uses a 4 KB WebP badge and text in the brand font. The badge artwork is unchanged.
 - **Fonts self-hosted** via `next/font` (Barlow Condensed, Inter; OFL). Downloaded at build time; visitors never contact Google.
 - **Images unoptimised by Next** (Cloudflare Images would cost money). Add photos pre-sized as WebP: hero 2400×1000, cards 1200×900.
+- **Phone and tablet navigation (below 1280px):** a floating navy-glass dock at the bottom (Home, Events, Sports, Quote, More) and a three-quarter menu sheet behind More, ported from Swords Village (its decision #45). At most four destinations plus More, per the Project OS mobile-shell rule. The Project OS PWA half (install, offline) was not adopted: this is a brochure site, not a task app.
 - **No analytics or cookies**, so no consent banner. Cloudflare Web Analytics (cookieless, free) can be added later if wanted.
 - **Photography:** 11 free photos from Unsplash (Unsplash License: commercial use, no attribution required; photographers credited on the image). Each photo's source and photographer is listed in `content/photos.ts`. Chosen to avoid crests, sponsors and recognisable players; perimeter advertising is faintly visible in the hero. Events without their own photo use their sport's. Any slot without a photo falls back to the navy-and-gold motif. Replace with commissioned or licensed event photography when budget allows.
 

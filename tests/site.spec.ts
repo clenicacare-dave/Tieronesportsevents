@@ -39,8 +39,7 @@ for (const path of pages) {
 test('visitor goes from home to an event and lands on a pre-filled quote form', async ({ page, isMobile }) => {
   await page.goto('/');
   if (isMobile) {
-    await page.getByText('Menu', { exact: true }).click();
-    await page.getByRole('navigation', { name: 'Mobile' }).getByRole('link', { name: 'Events' }).click();
+    await page.getByRole('navigation', { name: 'Quick links' }).getByRole('link', { name: 'Events' }).click();
   } else {
     await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Events' }).click();
   }
@@ -73,6 +72,22 @@ test('no page scrolls sideways and the hero badge stays on screen', async ({ pag
   const width = page.viewportSize()!.width;
   expect(badge!.x).toBeGreaterThanOrEqual(0);
   expect(badge!.x + badge!.width).toBeLessThanOrEqual(width);
+});
+
+test('phone and tablet: More opens the menu sheet, which closes on Escape and on navigating', async ({ page, isMobile }) => {
+  test.skip(!isMobile, 'The dock is for phones and tablets');
+  await page.goto('/');
+  const sheet = page.getByRole('dialog', { name: 'Site menu' });
+  await expect(sheet).toBeHidden();
+  await page.getByRole('button', { name: 'More' }).click();
+  await expect(sheet).toBeVisible();
+  await expect(sheet.getByRole('link', { name: /Group travel/ })).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(sheet).toBeHidden();
+  await page.getByRole('button', { name: 'More' }).click();
+  await sheet.getByRole('link', { name: /FAQs/ }).click();
+  await expect(page).toHaveURL(/\/faqs$/);
+  await expect(sheet).toBeHidden();
 });
 
 test('unknown pages return 404', async ({ page }) => {

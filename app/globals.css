@@ -5,6 +5,10 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --glass-ink2: #c9d3df;
+    --glass-hi: rgb(255 255 255 / 0.12);
+  }
   html {
     color-scheme: light;
     -webkit-text-size-adjust: 100%;
@@ -102,6 +106,25 @@
   }
   .photo-rings-sm {
     background-image: repeating-radial-gradient(circle at 88% 115%, transparent 0 26px, rgb(var(--color-gold) / 0.22) 26px 27px);
+  }
+  /* Navy glass for the phone dock and its menu sheet (components/MobileDock.tsx), after Swords Village.
+     The sheet is firmer glass so its text stays easy to read. Solid navy with "reduce transparency". */
+  .glass {
+    background: linear-gradient(160deg, rgb(var(--color-navy) / 0.74), rgb(15 26 38 / 0.82) 60%, rgb(var(--color-navy) / 0.78));
+    -webkit-backdrop-filter: blur(28px) saturate(160%);
+    backdrop-filter: blur(28px) saturate(160%);
+    border: 1px solid rgb(var(--color-gold) / 0.28);
+    box-shadow: 0 14px 34px rgb(5 12 22 / 0.4), 0 2px 6px rgb(5 12 22 / 0.25), inset 0 1.5px 0 rgb(255 255 255 / 0.22);
+  }
+  .glass-sheet {
+    background: linear-gradient(160deg, rgb(var(--color-navy) / 0.9), rgb(15 26 38 / 0.94));
+  }
+  .glass-pill {
+    background: rgb(255 255 255 / 0.16);
+    box-shadow: 0 1px 4px rgb(5 12 22 / 0.35), inset 0 1px 0 rgb(255 255 255 / 0.3);
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    .glass, .glass-sheet { background: rgb(var(--color-navy)); -webkit-backdrop-filter: none; backdrop-filter: none; }
   }
   .motif-soft::before {
     content: '';

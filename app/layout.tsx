@@ -3,6 +3,7 @@ import { Barlow_Condensed, Inter } from 'next/font/google';
 import './globals.css';
 import { SiteHeader } from '@/components/SiteHeader';
 import { SiteFooter } from '@/components/SiteFooter';
+import { MobileDock } from '@/components/MobileDock';
 import { JsonLd } from '@/components/ui';
 import { brand } from '@/brand/brand';
 import { site, absoluteUrl } from '@/lib/site';
@@ -33,7 +34,8 @@ export const metadata: Metadata = {
   twitter: { card: 'summary' }
 };
 
-export const viewport: Viewport = { themeColor: brand.themeColor };
+// viewportFit 'cover' lets the dock use the iPhone safe area (env(safe-area-inset-bottom)).
+export const viewport: Viewport = { themeColor: brand.themeColor, viewportFit: 'cover' };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -42,6 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SiteHeader />
         <main id="main">{children}</main>
         <SiteFooter />
+        <MobileDock />
         <JsonLd
           data={{
             '@context': 'https://schema.org',
