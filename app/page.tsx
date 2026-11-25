@@ -12,24 +12,25 @@ export default function HomePage() {
     <>
       {/* Hero */}
       <section className="relative isolate overflow-hidden bg-navy text-white">
+        {/* Layers: stadium photo, navy wash, gold rings radiating from the badge (both gently animated). */}
         {heroPhoto ? (
           <>
-            <PhotoSlot photo={heroPhoto} priority sizes="100vw" className="absolute inset-0 -z-10" />
-            <div className="absolute inset-0 -z-10 bg-gradient-to-r from-navy via-navy/80 to-navy/10" />
+            <PhotoSlot photo={heroPhoto} priority sizes="100vw" className="absolute inset-0 -z-30" />
+            <div className="absolute inset-0 -z-20 bg-gradient-to-r from-navy via-navy/80 to-navy/35" />
           </>
         ) : (
-          // Until licensed photography is added: the badge at the centre of the stadium-lines motif.
-          <div className="hero-rings absolute inset-0 -z-10" aria-hidden="true">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={brand.logo.badgeLarge}
-              alt=""
-              width={480}
-              height={480}
-              className="absolute right-[-120px] top-1/2 w-[300px] -translate-y-1/2 opacity-25 sm:right-[-60px] sm:w-[380px] sm:opacity-40 lg:right-[6%] lg:w-[420px] lg:opacity-100"
-            />
-          </div>
+          <div className="motif absolute inset-0 -z-30" />
         )}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute right-[-150px] top-1/2 -z-10 w-[300px] -translate-y-1/2 sm:right-[-70px] sm:w-[380px] lg:right-[6%] lg:w-[420px]"
+        >
+          <div className="hero-rings-anim absolute left-1/2 top-1/2 aspect-square w-[420%] -translate-x-1/2 -translate-y-1/2" />
+          <div className="hero-badge relative opacity-30 sm:opacity-50 lg:opacity-100">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={brand.logo.badgeLarge} alt="" width={480} height={480} className="relative w-full drop-shadow-[0_20px_50px_rgba(0,0,0,0.55)]" />
+          </div>
+        </div>
         <div className="mx-auto flex min-h-[78svh] max-w-site flex-col justify-end px-5 pb-16 pt-24 sm:px-8 sm:pb-24 lg:min-h-[640px]">
           <Eyebrow tone="light">Experience sport differently</Eyebrow>
           <h1 className="mt-5 max-w-4xl font-heading text-[3.4rem] lg:max-w-[56%] font-semibold uppercase leading-[0.9] sm:text-8xl">{brand.tagline}</h1>
