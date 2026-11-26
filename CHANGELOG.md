@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.1 — Smooth hero rings (2026-11-26)
+
+- Hero rings drawn on one canvas: 60fps instead of about 10, crisp lines, no shimmer; pause off screen; off for reduced motion.
+
 ## 0.4.0 — Motion and mobile dock (2026-11-26)
 
 - Home hero: stadium photo layered under a navy-and-gold wash; T1 badge floats over it with a slow light sweep.

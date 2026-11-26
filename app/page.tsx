@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { PhotoSlot } from '@/components/PhotoSlot';
+import { HeroRings } from '@/components/HeroRings';
 import { CtaBand, Eyebrow, EventCard, Section, SectionHeading, SportCard } from '@/components/ui';
 import { featuredEvents } from '@/content/events';
 import { sports } from '@/content/sports';
@@ -15,20 +16,15 @@ export default function HomePage() {
         {/* Layers: stadium photo, navy wash (solid behind the text, lighter on the right) with a gold glow, fine rings from the badge. */}
         <PhotoSlot photo={heroPhoto} rings={false} creditTop priority sizes="100vw" className="absolute inset-0 -z-30" />
         <div className="hero-glow absolute inset-0 -z-20" />
-        {/* Phones and tablets: rings rise from the bottom centre, behind the badge that straddles the edge below. */}
-        <div aria-hidden="true" className="hero-rings-anim pointer-events-none absolute bottom-0 left-1/2 -z-10 aspect-square w-[1400px] -translate-x-1/2 translate-y-1/2 xl:hidden" />
+        {/* Moving gold rings: from the badge on desktop, from the bottom centre on phones and tablets. */}
+        <HeroRings />
         <div className="mx-auto flex max-w-site flex-col px-5 pb-28 pt-14 sm:px-8 sm:pb-36 sm:pt-20 xl:min-h-[640px] xl:justify-end xl:pb-24 xl:pt-24">
           {/* Wide screens: badge beside the headline, rings centred on it, behind everything. */}
           <div
             aria-hidden="true"
+            data-ring-centre
             className="pointer-events-none absolute right-[6%] top-1/2 -z-10 hidden w-[420px] -translate-y-1/2 xl:block"
           >
-            {/* Rings leave the badge fast and slow down as they spread (eased ripple); a still version for reduced motion. */}
-            <div className="hero-ripple absolute inset-0 -z-10 motion-reduce:hidden">
-              {Array.from({ length: 14 }, (_, i) => (
-                <span key={i} style={{ animationDelay: `${-(i * 12) / 14}s` }} />
-              ))}
-            </div>
             <div className="hero-rings-still absolute left-1/2 top-1/2 -z-20 aspect-square w-[700%] -translate-x-1/2 -translate-y-1/2" />
             <HeroBadge />
           </div>
