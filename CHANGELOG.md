@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.0 — Kids football edition (2026-11-26)
+
+- Two editions from one codebase (`lib/edition.ts`): **kids football** (default) and **full**. Kids football: youth football trips for clubs and academies, schools and families; new home, audience pages, sample trips, FAQs, navigation and quote options. Full-edition pages return 404 in it, and the reverse.
+- Intro film: first play opens centred and large, then shrinks to a small corner player; rings ease off while it plays.
+- Header keeps its height on scroll (no page jump).
+
 ## 0.7.0 — Intro film and handover docs (2026-11-26)
 
 - Intro film "The Journey to the Game" plays full screen on a first visit (home page and holding page): Skip, Escape, sound toggle, progress bar; "Watch the film" replays it. No autoplay for reduced motion. 1080p and 720p encodes under the Workers asset limit.
