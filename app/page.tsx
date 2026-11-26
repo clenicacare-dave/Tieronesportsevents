@@ -25,7 +25,6 @@ export default function HomePage() {
             data-ring-centre
             className="pointer-events-none absolute right-[6%] top-1/2 -z-10 hidden w-[420px] -translate-y-1/2 xl:block"
           >
-            <div className="hero-rings-still absolute left-1/2 top-1/2 -z-20 aspect-square w-[700%] -translate-x-1/2 -translate-y-1/2" />
             <HeroBadge />
           </div>
           <Eyebrow tone="light">Experience sport differently</Eyebrow>
@@ -83,7 +82,7 @@ export default function HomePage() {
       </Section>
 
       {/* Group travel */}
-      <section className="bg-surface">
+      <section className="ring-corner overflow-hidden bg-surface">
         <div className="mx-auto grid max-w-site items-stretch lg:grid-cols-2">
           <PhotoSlot photo={groupsPhoto} label="Groups" className="group min-h-[320px] lg:min-h-[560px]" sizes="(min-width: 1024px) 50vw, 100vw" />
           <div className="flex flex-col justify-center px-5 py-16 sm:px-12 lg:py-24">

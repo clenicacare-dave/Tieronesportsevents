@@ -57,13 +57,6 @@
       linear-gradient(90deg, rgb(var(--color-navy) / 0.97) 25%, rgb(var(--color-navy) / 0.72) 55%, rgb(var(--color-navy) / 0.5) 100%),
       linear-gradient(180deg, rgb(15 26 38 / 0.35), transparent 30%, transparent 70%, rgb(15 26 38 / 0.55));
   }
-  /* Desktop hero: faint fixed fine lines (the approved texture) under eased moving rings. */
-  .hero-rings-still {
-    border-radius: 9999px;
-    background-image: repeating-radial-gradient(circle at center, transparent 0 56px, rgb(var(--color-gold) / 0.1) 56px 57px);
-    -webkit-mask-image: radial-gradient(circle at center, #000 45%, transparent 75%);
-    mask-image: radial-gradient(circle at center, #000 45%, transparent 75%);
-  }
   /* Badge: slow float, and a light sweep across it, clipped to the circle. */
   .hero-badge {
     border-radius: 9999px;
@@ -95,9 +88,9 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background-image: repeating-radial-gradient(circle at 88% 115%, transparent 0 54px, rgb(var(--color-gold) / 0.2) 54px 55px);
-    -webkit-mask-image: radial-gradient(circle at 88% 115%, #000 20%, transparent 85%);
-    mask-image: radial-gradient(circle at 88% 115%, #000 20%, transparent 85%);
+    background-image: repeating-radial-gradient(circle at 88% 115%, transparent 0 54px, rgb(var(--color-gold) / 0.32) 54px 55.5px);
+    -webkit-mask-image: radial-gradient(circle at 88% 115%, #000 30%, transparent 90%);
+    mask-image: radial-gradient(circle at 88% 115%, #000 30%, transparent 90%);
   }
   .photo-rings {
     transform-origin: 88% 115%;
@@ -117,8 +110,12 @@
     0%, 100% { scale: 1; }
     50% { scale: 1.05; }
   }
+  /* Card-sized photos: bolder rings, so they read at small sizes and over bright skies. */
   .photo-rings-sm {
-    background-image: repeating-radial-gradient(circle at 88% 115%, transparent 0 26px, rgb(var(--color-gold) / 0.22) 26px 27px);
+    background-image: repeating-radial-gradient(circle at 88% 115%, transparent 0 28px, rgb(var(--color-gold) / 0.42) 28px 29.5px);
+    -webkit-mask-image: radial-gradient(circle at 88% 115%, #000 35%, transparent 95%);
+    mask-image: radial-gradient(circle at 88% 115%, #000 35%, transparent 95%);
+    opacity: 1;
   }
   /* Navy glass for the phone dock and its menu sheet (components/MobileDock.tsx), after Swords Village.
      The sheet is firmer glass so its text stays easy to read. Solid navy with "reduce transparency". */
@@ -145,8 +142,34 @@
     inset: 0;
     pointer-events: none;
     background-image:
-      repeating-radial-gradient(ellipse at 95% 140%, transparent 0 70px, rgb(var(--color-gold) / 0.07) 70px 71px),
+      repeating-radial-gradient(ellipse at 95% 140%, transparent 0 56px, rgb(var(--color-gold) / 0.12) 56px 57.5px),
       radial-gradient(ellipse at 95% 130%, rgb(var(--color-gold) / 0.12), transparent 50%);
+  }
+
+  /* Rings that break up plain backgrounds: a set of concentric rings rising from one corner and
+     fading out, navy on the light sections and gold on navy. Consecutive sections alternate corners.
+     Sits behind the content (isolation + z-index -1), so nothing needs extra markup. */
+  .ring-corner {
+    position: relative;
+    isolation: isolate;
+    --ring-ink: rgb(var(--color-navy) / 0.055);
+    --ring-at: 104% -12%;
+  }
+  .ring-corner:nth-of-type(even) {
+    --ring-at: -8% 112%;
+  }
+  .ring-corner.ring-gold {
+    --ring-ink: rgb(var(--color-gold) / 0.1);
+  }
+  .ring-corner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: repeating-radial-gradient(circle at var(--ring-at), transparent 0 56px, var(--ring-ink) 56px 57.5px);
+    -webkit-mask-image: radial-gradient(circle at var(--ring-at), #000 0, #000 12%, transparent 45%);
+    mask-image: radial-gradient(circle at var(--ring-at), #000 0, #000 12%, transparent 45%);
   }
 
   .prose-t1 {

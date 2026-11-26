@@ -3,12 +3,11 @@
 import { useEffect, useRef } from 'react';
 
 // Gold rings moving out from the T1 badge on the home hero, drawn on one canvas.
-// Desktop (1280px+): rings leave the badge fast and slow down as they spread, fading out (12s cycle).
+// Desktop (1280px+): rings drift out from the badge, slowing as they spread and fading out (24s life each).
 // Phones and tablets: a steady ripple from the bottom centre, behind the badge that straddles the edge.
 // A canvas keeps the lines crisp and costs almost nothing per frame; the earlier CSS versions
 // (animating ring width, or a custom property inside a huge gradient) repainted large areas every
-// frame and shimmered. Pauses off screen; draws nothing for visitors who prefer reduced motion
-// (the fixed fine-line texture in CSS stays).
+// frame and shimmered. Pauses off screen; draws nothing for visitors who prefer reduced motion.
 
 const GOLD = '217, 183, 108';
 const DESKTOP = '(min-width: 1280px)';
@@ -62,17 +61,19 @@ export function HeroRings() {
       ctx.stroke();
     };
 
-    // Desktop: 14 rings, each on a 12s life. Fast near the badge, slow far out.
+    // Desktop: 10 rings, each on a 24s life. A little quicker near the badge, slowing far out.
+    // Rings are born just outside the badge rim and fade in gently, so the rim itself never seems to pulse.
     const drawWide = (s: number) => {
-      const count = 14;
-      const life = 12;
-      const reach = r0 * 5.2;
+      const count = 10;
+      const life = 24;
+      const start = r0 * 1.08;
+      const reach = r0 * 5;
       for (let i = 0; i < count; i++) {
         const t = ((s + (i * life) / count) % life) / life;
-        const eased = 1 - Math.pow(1 - t, 2.6);
-        const r = r0 + (reach - r0) * eased;
-        const fade = t < 0.03 ? t / 0.03 : t < 0.6 ? 1 - ((t - 0.03) / 0.57) * 0.55 : 0.45 * (1 - (t - 0.6) / 0.4);
-        ring(r, 0.5 * fade, 1.5);
+        const eased = 1 - Math.pow(1 - t, 1.8);
+        const r = start + (reach - start) * eased;
+        const fade = t < 0.15 ? t / 0.15 : t < 0.6 ? 1 - ((t - 0.15) / 0.45) * 0.5 : 0.5 * (1 - (t - 0.6) / 0.4);
+        ring(r, 0.45 * fade, 1.25);
       }
     };
 

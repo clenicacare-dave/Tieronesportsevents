@@ -6,7 +6,7 @@ import { companyConfirmed, site } from '@/lib/site';
 
 export function SiteFooter() {
   return (
-    <footer className="bg-navy text-white">
+    <footer className="ring-corner ring-gold overflow-hidden bg-navy text-white">
       <div className="mx-auto grid max-w-site gap-12 px-5 py-16 sm:px-8 lg:grid-cols-[1.4fr_repeat(3,1fr)]">
         <div>
           <Logo />

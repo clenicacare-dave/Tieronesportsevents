@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.1 — Calmer rings (2026-11-26)
+
+- Desktop hero rings: slower (24s per ring), start just outside the badge and fade in; no static rings behind.
+- Gold rings on every photo, including sport tiles (now above the shading); a faint corner ring set breaks up plain sections and the footer. Kept subtle.
+
 ## 0.5.0 — Legal drafts and new hero (2026-11-26)
 
 - Privacy notice, cookies and terms rewritten for an Irish registered company; new booking conditions draft (noindex until signed off).

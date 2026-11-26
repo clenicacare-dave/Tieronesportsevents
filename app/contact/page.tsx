@@ -14,7 +14,7 @@ export default function ContactPage() {
   return (
     <>
       <PageHero eyebrow="Contact" title="Talk to Tier One" intro="A question, an idea or a group to look after: send us a message and a person will reply, usually within one working day." />
-      <section className="bg-surface">
+      <section className="ring-corner overflow-hidden bg-surface">
         <div className="mx-auto grid max-w-site gap-12 px-5 py-16 sm:px-8 lg:grid-cols-[1fr_1.5fr] lg:py-20">
           <div className="space-y-8">
             <div>
