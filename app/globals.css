@@ -88,7 +88,7 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background-image: repeating-radial-gradient(circle at 88% 115%, transparent 0 54px, rgb(var(--color-gold) / 0.5) 54px 55.5px);
+    background-image: repeating-radial-gradient(circle at 88% 115%, transparent 0 54px, rgb(var(--color-gold) / 0.32) 54px 55.5px);
     -webkit-mask-image: radial-gradient(circle at 88% 115%, #000 30%, transparent 90%);
     mask-image: radial-gradient(circle at 88% 115%, #000 30%, transparent 90%);
   }
@@ -112,7 +112,7 @@
   }
   /* Card-sized photos: bolder rings, so they read at small sizes and over bright skies. */
   .photo-rings-sm {
-    background-image: repeating-radial-gradient(circle at 88% 115%, transparent 0 28px, rgb(var(--color-gold) / 0.6) 28px 29.5px);
+    background-image: repeating-radial-gradient(circle at 88% 115%, transparent 0 28px, rgb(var(--color-gold) / 0.42) 28px 29.5px);
     -webkit-mask-image: radial-gradient(circle at 88% 115%, #000 35%, transparent 95%);
     mask-image: radial-gradient(circle at 88% 115%, #000 35%, transparent 95%);
     opacity: 1;
@@ -142,7 +142,7 @@
     inset: 0;
     pointer-events: none;
     background-image:
-      repeating-radial-gradient(ellipse at 95% 140%, transparent 0 56px, rgb(var(--color-gold) / 0.2) 56px 57.5px),
+      repeating-radial-gradient(ellipse at 95% 140%, transparent 0 56px, rgb(var(--color-gold) / 0.12) 56px 57.5px),
       radial-gradient(ellipse at 95% 130%, rgb(var(--color-gold) / 0.12), transparent 50%);
   }
 
@@ -152,14 +152,14 @@
   .ring-corner {
     position: relative;
     isolation: isolate;
-    --ring-ink: rgb(var(--color-navy) / 0.09);
+    --ring-ink: rgb(var(--color-navy) / 0.055);
     --ring-at: 104% -12%;
   }
   .ring-corner:nth-of-type(even) {
     --ring-at: -8% 112%;
   }
   .ring-corner.ring-gold {
-    --ring-ink: rgb(var(--color-gold) / 0.16);
+    --ring-ink: rgb(var(--color-gold) / 0.1);
   }
   .ring-corner::before {
     content: '';
@@ -168,8 +168,8 @@
     z-index: -1;
     pointer-events: none;
     background-image: repeating-radial-gradient(circle at var(--ring-at), transparent 0 56px, var(--ring-ink) 56px 57.5px);
-    -webkit-mask-image: radial-gradient(circle at var(--ring-at), #000 0, #000 18%, transparent 62%);
-    mask-image: radial-gradient(circle at var(--ring-at), #000 0, #000 18%, transparent 62%);
+    -webkit-mask-image: radial-gradient(circle at var(--ring-at), #000 0, #000 12%, transparent 45%);
+    mask-image: radial-gradient(circle at var(--ring-at), #000 0, #000 12%, transparent 45%);
   }
 
   .prose-t1 {
