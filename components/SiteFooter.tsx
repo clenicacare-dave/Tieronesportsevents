@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Logo } from './Logo';
 import { footerNav } from '@/lib/nav';
 import { brand } from '@/brand/brand';
-import { site } from '@/lib/site';
+import { companyConfirmed, site } from '@/lib/site';
 
 export function SiteFooter() {
   return (
@@ -36,7 +36,13 @@ export function SiteFooter() {
         {/* Extra bottom space below 1280px so the floating dock never covers the footer. */}
         <div className="mx-auto flex max-w-site flex-col gap-2 px-5 pb-[calc(6.5rem+env(safe-area-inset-bottom))] pt-6 text-sm text-white/60 sm:flex-row sm:justify-between sm:px-8 xl:pb-6">
           <p>
-            © {new Date().getFullYear()} {brand.name}
+            © {new Date().getFullYear()} {companyConfirmed ? site.company.legalName : brand.name}
+            {/* Irish company law: registered name, number and office on the website (shown once confirmed). */}
+            {companyConfirmed && (
+              <>
+                . Registered in Ireland, no. {site.company.croNumber}. Registered office: {site.company.registeredOffice}.
+              </>
+            )}
           </p>
           <p>Enquiries only. Bookings are confirmed in writing, never on this website.</p>
         </div>

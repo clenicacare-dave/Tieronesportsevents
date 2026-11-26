@@ -25,7 +25,8 @@ export const footerNav = {
   Legal: [
     { href: '/privacy', label: 'Privacy notice' },
     { href: '/cookies', label: 'Cookies' },
-    { href: '/terms', label: 'Terms of use' }
+    { href: '/terms', label: 'Terms of use' },
+    { href: '/booking-conditions', label: 'Booking conditions' }
   ]
 };
 

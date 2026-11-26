@@ -2,7 +2,7 @@ import type { Photo } from './types';
 import { photos } from './photos';
 
 // Home page photography. Add licensed images (hero 2400×1000, clear left-hand area for text).
-export const heroPhoto: Photo | undefined = photos.heroCrowd;
+export const heroPhoto: Photo | undefined = photos.heroWinger;
 export const groupsPhoto: Photo | undefined = photos.fansScarves;
 
 export const howItWorks = [

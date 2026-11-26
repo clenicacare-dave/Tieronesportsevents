@@ -42,7 +42,8 @@ Testimonials and case studies are left out: none are genuine yet.
 
 ### Assumptions
 
-- The domain is **www.tieronesportsevents.com** (live). `tieronesportsevents.ie` was not registered on 25 Nov 2026; switching is one value in `lib/site.ts`, plus DNS and a Worker route.
+- The domain is **www.tieronesportsevents.com** (live), and the company uses .com only (confirmed 26 Nov 2026).
+- Tier One is a company registered in Ireland. Its registered name, CRO number, registered office, VAT number and travel licence live in one place, `site.company` in `lib/site.ts`; while blank, pages show [placeholders] and the footer shows the brand name only. Irish company law requires the name, number and office on the website.
 - **Enquiries stay on.** The brief says to keep submission disabled until secure handling is approved; the existing form (Turnstile, honeypot, rate limit, consent, length limits, sent only to info@ and stored nowhere else) was already live and approved by the business. `site.enquiriesEnabled` turns it off in one line.
 - The supplied HTML prototype was used as a reference only; the site stays on the existing Next.js/React codebase (the brief prefers reusing a suitable stack over migrating).
 - Sample events use real event names and venues for realism, but are labelled and state that they are not available packages.
@@ -109,7 +110,7 @@ Verify current terms before relying on these.
 
 ## 6. Open business decisions
 
-1. **Domain:** register `tieronesportsevents.ie`, and if so, which is primary?
+1. **Company details:** registered name, CRO number, registered office, VAT number, travel licence and bonding (fill `site.company`). Drafts of the privacy notice, cookies, terms, booking conditions, About and FAQs were written 26 Nov 2026 for sign-off; see `docs/SIGN-OFF.md`.
 2. **Enquiries:** confirm the live form is approved "secure handling", or switch it off until Phase 0 governance is done.
 3. **Customer acknowledgement email:** accept none, or upgrade the Cloudflare account to Workers Paid.
 4. **Photography:** free Unsplash photos are in place; decide whether to commission or license event-specific photography later.

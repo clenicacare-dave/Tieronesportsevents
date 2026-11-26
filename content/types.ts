@@ -5,6 +5,7 @@ export interface Photo {
   alt: string;
   credit?: string; // photographer / licence, shown on the image
   source?: string; // where it came from, for the licence record
+  position?: string; // CSS object-position for the crop, e.g. '70% 50%' (default centre)
 }
 
 export type SportSlug = 'football' | 'rugby' | 'motorsport' | 'golf' | 'racing';

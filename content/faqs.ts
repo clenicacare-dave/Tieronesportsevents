@@ -1,12 +1,17 @@
 import type { Faq } from './types';
 
-// Draft answers: they describe how this website works today. Tier One must confirm
-// each answer (and add policy answers such as payments and cancellations) before launch.
+// Draft answers for Tier One to sign off. Items in [square brackets] need a business decision.
+// Answers about payments, cancellations and protection must match the booking conditions page.
 export const faqs: Faq[] = [
+  {
+    question: 'Who are Tier One Sports Events?',
+    answer:
+      'An Irish company that plans travel to sporting occasions for supporters, families, clubs, schools and corporate groups from Ireland and the UK.'
+  },
   {
     question: 'Can I book a trip on this website?',
     answer:
-      'Not yet. The website is for finding out what is possible and sending an enquiry. We reply with options and confirm everything in writing before anything is agreed.'
+      'No. The website is for finding out what is possible and sending an enquiry. We reply with options and a written quote, and your booking is confirmed in writing once you accept it and pay the deposit.'
   },
   {
     question: 'Are the events on the website available to book?',
@@ -16,17 +21,39 @@ export const faqs: Faq[] = [
   {
     question: 'Do you supply match or event tickets?',
     answer:
-      'Tickets are not included unless we confirm them in writing for your trip. Your quote will say exactly what is and is not included.'
+      'When your quote includes tickets or official hospitality, they come from the event organiser, the club or an authorised hospitality programme, never from touts. Your quote says exactly what is and is not included.'
   },
   {
-    question: 'Can you plan a trip for a club or a large group?',
+    question: 'What happens if the fixture date changes?',
     answer:
-      'Yes. Tell us about the group, the dates you have in mind and what you want from the trip, and we will shape the options around you.'
+      'Fixture dates and kick-off times are set by leagues, organisers and broadcasters and can move, especially for televised matches. If that happens we will tell you as soon as we know and offer the options available. [Confirm the policy in the booking conditions.]'
   },
   {
-    question: 'Who do I travel with if something changes?',
+    question: 'Is my money protected?',
     answer:
-      'Your quote will set out who provides each part of your trip and who to contact. Fixture dates can change, especially for televised matches, so we explain how changes are handled before you commit.'
+      'Package trips are protected under the Package Holidays and Linked Travel Arrangements Act 2019. [Add licence and bonding details once confirmed.]'
+  },
+  {
+    question: 'How do I pay?',
+    answer: 'A deposit secures your booking and the balance is due before departure. [Confirm deposit, balance date and payment methods.]'
+  },
+  {
+    question: 'What if I need to cancel?',
+    answer:
+      'You can cancel at any time in writing. Cancellation fees depend on how close to departure you cancel, and event tickets are usually non-refundable. See our booking conditions. [Confirm the fee schedule.]'
+  },
+  {
+    question: 'Can you plan a trip for a club, school or large group?',
+    answer:
+      'Yes. Tell us about the group, the dates you have in mind and what you want from the trip, and we will shape the options around you. For school and youth trips, the school or club looks after supervision and parental consent.'
+  },
+  {
+    question: 'Do I need travel insurance?',
+    answer: 'We strongly recommend it, with cover for cancellation, medical costs and the event itself. [Confirm whether it is required.]'
+  },
+  {
+    question: 'Can you help with access or dietary needs?',
+    answer: 'Yes. Tell us when you enquire and we will check with venues, hotels and carriers before you book.'
   },
   {
     question: 'How quickly will you reply?',
