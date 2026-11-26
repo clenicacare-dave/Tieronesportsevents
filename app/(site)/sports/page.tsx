@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { CtaBand, PageHero, Section, SportCard } from '@/components/ui';
+import { notFound } from 'next/navigation';
 import { sports } from '@/content/sports';
+import { isKids } from '@/lib/edition';
 
 export const metadata: Metadata = {
   title: 'Sports',
@@ -8,7 +10,9 @@ export const metadata: Metadata = {
   alternates: { canonical: '/sports' }
 };
 
+// Full edition only (404 in the kids football edition).
 export default function SportsPage() {
+  if (isKids) notFound();
   return (
     <>
       <PageHero eyebrow="Sports" title="Every sport, one approach" intro="Whatever the occasion, we plan the travel around the event and the people going." />

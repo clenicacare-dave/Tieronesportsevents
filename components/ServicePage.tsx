@@ -2,15 +2,24 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { PhotoSlot } from './PhotoSlot';
 import { CtaBand, PageHero, Section } from './ui';
+import { notFound } from 'next/navigation';
 import { services, type Service } from '@/content/services';
+import { kidsAudiences } from '@/content/kids/audiences';
+import { eventsLabel, isKids } from '@/lib/edition';
+
+const all: Record<Service['slug'], Service> = { ...services, ...kidsAudiences };
+// Each edition has its own service pages; the others return 404.
+const inEdition = (slug: Service['slug']) => (isKids ? slug in kidsAudiences : slug in services);
 
 export const serviceMetadata = (slug: Service['slug']): Metadata => {
-  const s = services[slug];
+  if (!inEdition(slug)) return {};
+  const s = all[slug];
   return { title: s.eyebrow, description: s.description, alternates: { canonical: `/${s.slug}` } };
 };
 
 export function ServicePage({ slug }: { slug: Service['slug'] }) {
-  const s = services[slug];
+  if (!inEdition(slug)) notFound();
+  const s = all[slug];
   return (
     <>
       <PageHero eyebrow={s.eyebrow} title={s.title} intro={s.intro}>
@@ -19,7 +28,7 @@ export function ServicePage({ slug }: { slug: Service['slug'] }) {
             Request a quote
           </Link>
           <Link href="/events" className="btn-outline">
-            Browse events
+            Browse {eventsLabel.toLowerCase()}
           </Link>
         </div>
       </PageHero>

@@ -3,17 +3,18 @@ import { brand } from '@/brand/brand';
 import { site } from '@/lib/site';
 import { HeroRings } from '@/components/HeroRings';
 import { IntroFilm } from '@/components/IntroFilm';
+import { isKids } from '@/lib/edition';
 
 // Holding page shown to the public while the site is gated (see middleware.ts).
 export const metadata: Metadata = {
   title: { absolute: `${brand.name} | Coming soon` },
-  description: `Sports travel and hospitality from ${site.regions}. Coming soon.`,
+  description: isKids ? `Youth football trips from ${site.regions}. Coming soon.` : `Sports travel and hospitality from ${site.regions}. Coming soon.`,
   robots: { index: false, follow: false }
 };
 
 export default function ComingSoon() {
   return (
-    <main id="main" className="relative isolate flex min-h-[100svh] items-center justify-center overflow-hidden bg-navy px-6 py-16 text-center text-white">
+    <main id="main" className="relative isolate flex min-h-[100svh] items-center justify-center overflow-hidden bg-navy px-6 pb-48 pt-16 text-center sm:pb-16 text-white">
       <HeroRings centred />
       <div className="flex max-w-xl flex-col items-center">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -24,7 +25,11 @@ export default function ComingSoon() {
         </h1>
         <p className="mt-10 font-heading text-lg uppercase tracking-[0.3em] text-white/90">Coming soon</p>
         <span aria-hidden="true" className="mt-5 h-px w-16 bg-gold/60" />
-        <p className="mt-5 text-white/75">Sports travel and hospitality for supporters, clubs and corporate groups from {site.regions}.</p>
+        <p className="mt-5 text-white/75">
+          {isKids
+            ? `Football trips for young players: clubs, academies, schools and families from ${site.regions}.`
+            : `Sports travel and hospitality for supporters, clubs and corporate groups from ${site.regions}.`}
+        </p>
         <IntroFilm className="mt-8" />
         <a href={`mailto:${site.email}`} className="mt-6 text-gold underline-offset-4 hover:underline">
           {site.email}

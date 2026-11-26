@@ -1,14 +1,16 @@
 import { expect, test } from '@playwright/test';
+import { isKids } from '../lib/edition';
+
+// The suite tests the edition being built (lib/edition.ts): kids football by default,
+// or the full site with NEXT_PUBLIC_SITE_EDITION=full set for both the build and the tests.
+const kidsOnly = ['/clubs-and-academies', '/schools', '/families', '/events/youth-tournament-costa-brava'];
+const fullOnly = ['/sports', '/sports/football', '/group-travel', '/corporate-hospitality', '/bespoke-trips', '/events/six-nations-weekend-edinburgh'];
+const sampleEvent = isKids ? 'family-match-weekend-liverpool' : 'british-grand-prix-weekend';
 
 const pages = [
   '/',
   '/events',
-  '/events/six-nations-weekend-edinburgh',
-  '/sports',
-  '/sports/football',
-  '/group-travel',
-  '/corporate-hospitality',
-  '/bespoke-trips',
+  ...(isKids ? kidsOnly : fullOnly),
   '/about',
   '/how-it-works',
   '/faqs',
@@ -38,39 +40,68 @@ for (const path of pages) {
 }
 
 test('visitor goes from home to an event and lands on a pre-filled quote form', async ({ page, isMobile }) => {
+  const list = isKids ? 'Trips' : 'Events';
+  const [slug, name] = isKids ? ['youth-tournament-costa-brava', 'Easter youth tournament, Costa Brava'] : ['cheltenham-festival', 'Cheltenham Festival'];
   await page.goto('/');
   if (isMobile) {
-    await page.getByRole('navigation', { name: 'Quick links' }).getByRole('link', { name: 'Events' }).click();
+    await page.getByRole('navigation', { name: 'Quick links' }).getByRole('link', { name: list }).click();
   } else {
-    await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Events' }).click();
+    await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: list }).click();
   }
   await expect(page).toHaveURL(/\/events$/);
-  await page.getByRole('link', { name: 'Cheltenham Festival' }).click();
-  await expect(page.locator('h1')).toHaveText(/Cheltenham Festival/i);
+  await page.getByRole('link', { name }).first().click();
+  await expect(page.locator('h1')).toHaveText(new RegExp(name, 'i'));
   await page.getByRole('link', { name: 'Enquire about this trip' }).click();
-  await expect(page).toHaveURL(/\/quote\?event=cheltenham-festival/);
-  await expect(page.locator('select[name="interest"]')).toHaveValue('Cheltenham Festival');
+  await expect(page).toHaveURL(new RegExp(`/quote\\?event=${slug}`));
+  await expect(page.locator('select[name="interest"]')).toHaveValue(name);
   await expect(page.getByRole('button', { name: 'Send quote request' })).toBeVisible();
 });
 
 test('sport tile Quote button opens the quote form with that sport selected', async ({ page }) => {
+  test.skip(isKids, 'Full edition only');
   await page.goto('/sports');
   await page.getByRole('link', { name: 'Quote for golf' }).click();
   await expect(page).toHaveURL(/\/quote\?event=golf/);
   await expect(page.locator('select[name="interest"]')).toHaveValue('Golf (any event)');
 });
 
+test('kids football: audience Quote button opens the quote form with that group selected', async ({ page }) => {
+  test.skip(!isKids, 'Kids football edition only');
+  await page.goto('/');
+  await page.getByRole('link', { name: 'Quote for schools' }).click();
+  await expect(page).toHaveURL(/\/quote\?type=schools/);
+  await expect(page.locator('select[name="interest"]')).toHaveValue('Schools: any football trip');
+});
+
+test('pages from the other edition return 404 and stay out of the sitemap', async ({ page, request }) => {
+  const other = isKids ? fullOnly : kidsOnly;
+  for (const path of other) {
+    const res = await page.goto(path);
+    expect(res?.status(), path).toBe(404);
+  }
+  const sitemap = await (await request.get('/sitemap.xml')).text();
+  for (const path of other.filter((p) => !p.startsWith('/events/'))) expect(sitemap).not.toContain(`.com${path}<`);
+});
+
+test('kids football edition mentions no other sports or corporate trips in navigation', async ({ page }) => {
+  test.skip(!isKids, 'Kids football edition only');
+  await page.goto('/');
+  const text = (await page.locator('header, footer').allInnerTexts()).join(' ');
+  expect(text).not.toMatch(/rugby|golf|racing|motorsport|grand prix|corporate|hospitality/i);
+});
+
 test('sample events are labelled and kept out of search', async ({ page, request }) => {
-  await page.goto('/events/british-grand-prix-weekend');
+  await page.goto(`/events/${sampleEvent}`);
   await expect(page.getByText('Sample', { exact: true }).first()).toBeVisible();
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
   await expect(page.locator('script[type="application/ld+json"]', { hasText: '"Event"' })).toHaveCount(0);
   const sitemap = await (await request.get('/sitemap.xml')).text();
-  expect(sitemap).not.toContain('/events/british-grand-prix-weekend');
+  expect(sitemap).not.toContain(`/events/${sampleEvent}`);
 });
 
 test('no page scrolls sideways and the hero badge stays on screen', async ({ page }) => {
-  for (const path of ['/', '/events', '/events/cheltenham-festival', '/sports/rugby', '/quote']) {
+  const paths = isKids ? ['/', '/events', '/events/training-camp-barcelona', '/clubs-and-academies', '/quote'] : ['/', '/events', '/events/cheltenham-festival', '/sports/rugby', '/quote'];
+  for (const path of paths) {
     await page.goto(path);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     expect(overflow, `${path} overflows by ${overflow}px`).toBeLessThanOrEqual(0);
@@ -89,7 +120,7 @@ test('phone and tablet: More opens the menu sheet, which closes on Escape and on
   await expect(sheet).toBeHidden();
   await page.getByRole('button', { name: 'More' }).click();
   await expect(sheet).toBeVisible();
-  await expect(sheet.getByRole('link', { name: /Group travel/ })).toBeFocused();
+  await expect(sheet.getByRole('link', { name: isKids ? /Schools/ : /Group travel/ })).toBeFocused();
   await page.keyboard.press('Escape');
   await expect(sheet).toBeHidden();
   await page.getByRole('button', { name: 'More' }).click();

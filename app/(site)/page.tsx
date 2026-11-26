@@ -7,8 +7,16 @@ import { featuredEvents } from '@/content/events';
 import { sports } from '@/content/sports';
 import { groupsPhoto, heroPhoto, howItWorks, promises } from '@/content/home';
 import { brand } from '@/brand/brand';
+import { HeroBadge } from '@/components/HeroBadge';
+import { KidsHome } from '@/components/KidsHome';
+import { isKids } from '@/lib/edition';
 
+// The home page for the edition being built (lib/edition.ts).
 export default function HomePage() {
+  return isKids ? <KidsHome /> : <FullHome />;
+}
+
+function FullHome() {
   const featured = featuredEvents();
   return (
     <>
@@ -38,7 +46,7 @@ export default function HomePage() {
             <Link href="/quote" className="btn-outline">
               Request a quote
             </Link>
-            <IntroFilm className="sm:ml-3" />
+            <IntroFilm className="sm:ml-3" aboveDock />
           </div>
         </div>
       </section>
@@ -147,14 +155,5 @@ export default function HomePage() {
 
       <CtaBand />
     </>
-  );
-}
-
-function HeroBadge() {
-  return (
-    <div className="hero-badge relative">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={brand.logo.badgeLarge} alt="" width={480} height={480} className="relative w-full drop-shadow-[0_20px_50px_rgba(0,0,0,0.55)]" />
-    </div>
   );
 }

@@ -6,23 +6,34 @@ import { events } from '@/content/events';
 import { services } from '@/content/services';
 import { sports } from '@/content/sports';
 import { howItWorks } from '@/content/home';
+import { kidsAudiences } from '@/content/kids/audiences';
+import { isKids } from '@/lib/edition';
 
 export const metadata: Metadata = {
   title: 'Request a quote',
-  description: 'Tell us the sport, the dates and who is travelling, and we will come back with options.',
+  description: isKids
+    ? 'Tell us about the squad, school or family, the dates and the trip in mind, and we will come back with options.'
+    : 'Tell us the sport, the dates and who is travelling, and we will come back with options.',
   alternates: { canonical: '/quote' }
 };
 
-const interests: InterestOption[] = [
-  ...events.map((e) => ({ value: e.slug, label: e.name, group: 'Events' })),
-  ...sports.map((s) => ({ value: s.slug, label: `${s.name} (any event)`, group: 'Sports' })),
-  ...Object.values(services).map((s) => ({ value: s.slug, label: s.eyebrow, group: 'Trip types' }))
-];
+// What the visitor can pick in "Interested in". Kids football edition: the sample trips and who it is for.
+const interests: InterestOption[] = isKids
+  ? [
+      ...events.map((e) => ({ value: e.slug, label: e.name, group: 'Trips' })),
+      ...Object.values(kidsAudiences).map((a) => ({ value: a.slug, label: `${a.eyebrow}: any football trip`, group: 'Who it is for' })),
+      { value: 'other', label: 'Something else (tell us below)', group: 'Who it is for' }
+    ]
+  : [
+      ...events.map((e) => ({ value: e.slug, label: e.name, group: 'Events' })),
+      ...sports.map((s) => ({ value: s.slug, label: `${s.name} (any event)`, group: 'Sports' })),
+      ...Object.values(services).map((s) => ({ value: s.slug, label: s.eyebrow, group: 'Trip types' }))
+    ];
 
 export default function QuotePage() {
   return (
     <>
-      <PageHero eyebrow="Request a quote" title="Tell us where you want to be" intro="A few details are enough to start. There is no payment and no commitment." />
+       <PageHero eyebrow="Request a quote" title={isKids ? 'Tell us where your team wants to play' : 'Tell us where you want to be'} intro="A few details are enough to start. There is no payment and no commitment." />
       <section className="ring-corner overflow-hidden bg-surface">
         <div className="mx-auto grid max-w-site gap-12 px-5 py-16 sm:px-8 lg:grid-cols-[1fr_1.6fr] lg:py-20">
           <ol className="space-y-8 lg:pt-4">

@@ -5,6 +5,7 @@ import { PhotoSlot } from '@/components/PhotoSlot';
 import { Breadcrumbs, CtaBand, EventCard, Eyebrow, JsonLd, SampleLabel, formatPrice } from '@/components/ui';
 import { availabilityLabel, eventPhoto, events, eventsForSport, getEvent } from '@/content/events';
 import { sportName } from '@/content/sports';
+import { eventsLabel, isKids } from '@/lib/edition';
 import { brand } from '@/brand/brand';
 import { absoluteUrl, site } from '@/lib/site';
 
@@ -51,9 +52,9 @@ export default async function EventPage({ params }: Props) {
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-navy via-navy/85 to-navy/20" />
         <div aria-hidden="true" className="photo-rings -z-10" />
         <div className="mx-auto max-w-site px-5 pb-16 pt-12 sm:px-8 sm:pb-24 sm:pt-16">
-          <Breadcrumbs items={[{ href: '/events', label: 'Events' }, { label: event.name }]} />
+          <Breadcrumbs items={[{ href: '/events', label: eventsLabel }, { label: event.name }]} />
           <div className="flex items-center gap-3 text-gold">
-            <Eyebrow tone="light">{sportName(event.sport)}</Eyebrow>
+            <Eyebrow tone="light">{isKids ? 'Youth football' : sportName(event.sport)}</Eyebrow>
             <SampleLabel show={event.sample} />
           </div>
           <h1 className="mt-4 max-w-4xl font-heading text-5xl font-semibold uppercase leading-[0.95] sm:text-7xl">{event.name}</h1>
@@ -133,7 +134,7 @@ export default async function EventPage({ params }: Props) {
       {related.length > 0 && (
         <section className="bg-white">
           <div className="mx-auto max-w-site px-5 py-16 sm:px-8">
-            <h2 className="font-heading text-3xl font-semibold uppercase text-navy">More {sportName(event.sport).toLowerCase()}</h2>
+            <h2 className="font-heading text-3xl font-semibold uppercase text-navy">{isKids ? 'More trips' : `More ${sportName(event.sport).toLowerCase()}`}</h2>
             <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((e) => (
                 <EventCard key={e.slug} event={e} />

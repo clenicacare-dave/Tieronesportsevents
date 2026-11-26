@@ -4,11 +4,13 @@ import { PhotoSlot } from '@/components/PhotoSlot';
 import { Breadcrumbs, CtaBand, EventCard, Eyebrow, Section } from '@/components/ui';
 import { eventsForSport } from '@/content/events';
 import { getSport, sports } from '@/content/sports';
+import { isKids } from '@/lib/edition';
 
 type Props = { params: Promise<{ slug: string }> };
 
 export const dynamicParams = false;
-export const generateStaticParams = () => sports.map((s) => ({ slug: s.slug }));
+// Full edition only: no sport pages in the kids football edition.
+export const generateStaticParams = () => (isKids ? [] : sports.map((s) => ({ slug: s.slug })));
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const sport = getSport((await params).slug);
@@ -18,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function SportPage({ params }: Props) {
   const sport = getSport((await params).slug);
-  if (!sport) notFound();
+  if (!sport || isKids) notFound();
   const list = eventsForSport(sport.slug);
 
   return (

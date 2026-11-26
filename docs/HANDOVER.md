@@ -11,6 +11,10 @@ are drafts awaiting the business's sign-off (`docs/SIGN-OFF.md`). Events are sam
 
 ## 1. What the site is
 
+> **Two editions, one codebase.** `lib/edition.ts` picks which site is built. The default, **kids football**,
+> is what Tier One can sell now: youth football trips for clubs and academies, schools and families. The
+> **full** edition (every sport, corporate hospitality, bespoke trips) is kept intact for later. See section 5.
+
 A content-led brochure site for an Irish sports-travel company: events, sports, group, corporate and bespoke
 travel, information and legal pages, and one enquiry/quote form that emails `info@`. No bookings, payments,
 accounts or database. Every page is pre-rendered at build time; the only code that runs per request is the
@@ -82,7 +86,7 @@ components/                UI (see section 5)
 public/brand/              Logo badge and icons (originals in docs/brand-pack/)
 public/photos/             Photos as WebP (2000px and -sm 960px versions)
 public/video/              Intro film (1080p and 720p MP4, poster)
-tests/                     site.spec.ts (pages, journeys, SEO, headers), a11y.spec.ts (axe), gate.spec.ts, intro.spec.ts
+tests/                     edition-aware: site.spec.ts (pages, journeys, SEO, headers), a11y.spec.ts (axe), gate.spec.ts, intro.spec.ts
 docs/                      This file, PROJECT.md, SIGN-OFF.md, DNS-MIGRATION.md, brand-pack/
 wrangler.jsonc             Worker config: account, routes, Email binding, vars
 open-next.config.ts        Static-assets incremental cache (see gotchas)
@@ -90,6 +94,27 @@ next.config.mjs            Security headers / CSP, www redirect, legacy redirect
 ```
 
 ## 5. How the pieces work
+
+### Editions
+
+`lib/edition.ts` reads `NEXT_PUBLIC_SITE_EDITION` at build time: unset (default) builds **kids football**;
+`full` builds the multi-sport site. Build the full edition with
+`NEXT_PUBLIC_SITE_EDITION=full npx opennextjs-cloudflare build` (and set the same variable when running the
+tests, so they test the edition you built).
+
+| | Kids football (default) | Full |
+| --- | --- | --- |
+| Home | `components/KidsHome.tsx` | `FullHome` in `app/(site)/page.tsx` |
+| Trips / events | `content/kids/trips.ts` (list called "Trips", URL `/events`) | `fullEvents` in `content/events.ts` |
+| Audience / service pages | `/clubs-and-academies`, `/schools`, `/families` (`content/kids/audiences.ts`) | `/group-travel`, `/corporate-hospitality`, `/bespoke-trips` |
+| Sports pages | none (404) | `/sports`, `/sports/[slug]` |
+| FAQs | `content/kids/faqs.ts` | `fullFaqs` in `content/faqs.ts` |
+| Navigation, footer, dock | kids lists in `lib/nav.ts` | full lists in `lib/nav.ts` |
+| Quote form options | kids trips and audiences; kids group types | all events, sports and trip types |
+
+Pages outside the active edition return 404 and are left out of the sitemap, navigation and forms. Shared
+pages (About, How it works, Quote, legal, holding page, metadata) switch their copy with `isKids`. Legal
+pages are the same in both editions.
 
 ### Content
 
@@ -127,15 +152,17 @@ missing field fails the build.
 
 ### Intro film
 
-`components/IntroFilm.tsx` plays "The Journey to the Game" (39s) full screen on a visitor's first visit to the
-home page or the holding page. Skip, Escape or the end of the film closes it and stores `t1-intro-seen` in
-localStorage; the "Watch the film" button (home hero, holding page) replays it. Browsers block autoplay with
-sound, so it tries with sound and falls back to muted with a "Sound on" button. It never autoplays for
-reduced-motion visitors. An inline script covers the page in navy before first paint on a first visit, so the
-page does not flash before the film (with a 4s CSS safety fade if scripts fail).
+`components/IntroFilm.tsx` shows "The Journey to the Game" (39s). On a visitor's first visit to the home page
+or the holding page, the film opens one second after the page loads, centred and large (up to 1080px wide) over
+a dimmed page, muted until the visitor turns sound on. When it ends it shrinks into a small player in the bottom
+corner (above the phone dock on site pages), resting on the closing badge frame, and is stored as seen
+(`t1-intro-seen` in localStorage); play or expand there brings it back to the centre. Shrink, Escape or a click
+outside sends it to the corner early; Full screen and Close are in its control bar. "Watch the film" (home
+hero, holding page) opens it centred at any time. It never autoplays for reduced-motion visitors. While it
+plays, `HeroRings` draws at half rate (a `t1:film` window event) so slower devices can keep up.
 
-Files in `public/video/`: `intro-1080.mp4` (H.264, about 4.2 Mbps, 21 MB) for wide screens and `intro-720.mp4`
-(about 2.2 Mbps, 11 MB) under 1100px or with data saver; `intro-poster.jpg` is the first frame. The original
+Files in `public/video/`: `intro-1080.mp4` (H.264, about 4.2 Mbps, 21 MB) on screens 1100px and wider, and `intro-720.mp4`
+(about 2.2 Mbps, 11 MB) for smaller screens and data saver; `intro-poster.jpg` is the first frame. The original
 master is not in the repo (`uploads/` is git-ignored). Keep every file under the Workers static-asset limit of
 25 MiB. To replace the film, encode H.264 + AAC MP4s at those sizes (ffmpeg, HandBrake or any encoder), keep
 the file names, and re-run the tests. Tests start with the film marked as seen; `tests/intro.spec.ts` covers

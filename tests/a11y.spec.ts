@@ -1,8 +1,17 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
+import { isKids } from '../lib/edition';
 
 // Automated WCAG 2.2 A/AA checks. Not a substitute for a manual audit (keyboard, screen reader).
-const pages = ['/', '/events', '/events/cheltenham-festival', '/sports/rugby', '/group-travel', '/faqs', '/quote', '/contact', '/privacy'];
+const pages = [
+  '/',
+  '/events',
+  ...(isKids ? ['/events/youth-tournament-costa-brava', '/clubs-and-academies', '/families'] : ['/events/cheltenham-festival', '/sports/rugby', '/group-travel']),
+  '/faqs',
+  '/quote',
+  '/contact',
+  '/privacy'
+];
 
 for (const path of pages) {
   test(`${path} has no automatically detectable WCAG A/AA violations`, async ({ page }) => {

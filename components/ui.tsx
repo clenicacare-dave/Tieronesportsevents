@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { PhotoSlot } from './PhotoSlot';
 import { site } from '@/lib/site';
 import { sportName } from '@/content/sports';
+import { isKids } from '@/lib/edition';
 import { availabilityLabel, eventPhoto } from '@/content/events';
 import type { Sport, TravelEvent } from '@/content/types';
 
@@ -156,8 +157,10 @@ export function SportCard({ sport, index, className = '' }: { sport: Sport; inde
 }
 
 export function CtaBand({
-  title = 'Tell us where you want to be.',
-  body = 'Share the sport, the dates and who is travelling. We will come back with options, usually within one working day.'
+  title = isKids ? 'Tell us where your team wants to play.' : 'Tell us where you want to be.',
+  body = isKids
+    ? 'Share the age group, the dates and who is travelling. We will come back with options, usually within one working day.'
+    : 'Share the sport, the dates and who is travelling. We will come back with options, usually within one working day.'
 }: {
   title?: string;
   body?: string;
