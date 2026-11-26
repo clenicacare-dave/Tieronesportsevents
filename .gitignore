@@ -30,3 +30,6 @@ pnpm-debug.log*
 # Playwright
 /test-results/
 /playwright-report/
+
+# Raw uploads (originals; web versions live in public/photos)
+uploads/

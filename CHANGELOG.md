@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.0 — Legal drafts and new hero (2026-11-26)
+
+- Privacy notice, cookies and terms rewritten for an Irish registered company; new booking conditions draft (noindex until signed off).
+- About and FAQs expanded; open points in [brackets], listed in `docs/SIGN-OFF.md`.
+- Company details in one place (`site.company`); footer shows registration once filled.
+- Home hero: supplied winger photo. Domain is .com only.
+
 ## 0.4.1 — Smooth hero rings (2026-11-26)
 
 - Hero rings drawn on one canvas: 60fps instead of about 10, crisp lines, no shimmer; pause off screen; off for reduced motion.

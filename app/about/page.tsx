@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { CtaBand, DraftNotice, PageHero, Prose, Section } from '@/components/ui';
 import { brand } from '@/brand/brand';
-import { site } from '@/lib/site';
+import { company, site } from '@/lib/site';
 
 export const metadata: Metadata = {
   title: 'About',
@@ -15,10 +15,18 @@ export default function AboutPage() {
       <PageHero eyebrow="About" title="Built around the occasion" intro={`${brand.name} plans sports travel for people in ${site.regions} who would rather be there than watch from home.`} />
       <Section>
         <DraftNotice>
-          <strong>To complete before launch:</strong> company name and registration, who runs Tier One, the story behind it, and any
-          licences, bonding or memberships held. Add only what is true and can be verified.
+          <strong>Draft for sign-off.</strong> Items in [square brackets] are for Tier One to complete. Add only what is true and can be
+          verified.
         </DraftNotice>
         <Prose>
+          <h2>Who we are</h2>
+          <p>
+            {brand.name} is an Irish company that plans travel to sporting occasions for people in {site.regions}. We are{' '}
+            {company('legalName')}, registered in Ireland with CRO number {company('croNumber')}, at {company('registeredOffice')}.
+          </p>
+          <p>[The story: who founded Tier One, when, and why. Two or three sentences in your own words.]</p>
+          <h2>The people</h2>
+          <p>[Name, role and a line on each person a customer will deal with, with a photo if you have one.]</p>
           <h2>What we do</h2>
           <p>
             We plan trips to sporting occasions: football and rugby weekends, Grand Prix races, golf and festival racing, and tours for clubs
@@ -31,7 +39,13 @@ export default function AboutPage() {
             <li>Every trip starts with a conversation about who is going and what matters to them.</li>
             <li>Every quote sets out what is included and what is not, in writing, before you commit.</li>
             <li>We are clear about what we cannot promise, such as fixture dates set by leagues and broadcasters.</li>
+            <li>Event tickets come only from official sources, never touts.</li>
           </ul>
+          <h2>Licensed and protected</h2>
+          <p>
+            [Licence and bonding: {company('travelLicence')}. Add any memberships, such as the Irish Travel Agents Association, only if
+            held.]
+          </p>
         </Prose>
       </Section>
       <CtaBand />

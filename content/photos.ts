@@ -1,7 +1,7 @@
 import type { Photo } from './types';
 
 // Every photo used on the site, with its source and licence.
-// All from Unsplash under the Unsplash License (free for commercial use, no attribution required;
+// All from Unsplash (except the supplied home hero) under the Unsplash License (free for commercial use, no attribution required;
 // we credit photographers anyway). Checked 25 Nov 2026: none are Unsplash+.
 // Chosen to avoid club crests, sponsors and recognisable players, so nothing implies a partnership.
 // Each file exists at /photos/<name>.webp (2000px, hero 2400px) and /photos/<name>-sm.webp (960px, for cards).
@@ -15,6 +15,13 @@ const unsplash = (name: string, alt: string, photographer: string, id: string): 
 });
 
 export const photos = {
+  // Home hero, supplied by Tier One (26 Nov 2026), not from Unsplash. Cropped towards the winger and ball on narrow screens.
+  heroWinger: {
+    src: '/photos/hero-winger.webp',
+    alt: 'A winger drives towards the penalty area in a floodlit stadium',
+    source: 'Supplied by Tier One, 26 Nov 2026',
+    position: '72% 50%'
+  },
   heroCrowd: unsplash('hero-crowd', 'Supporters watching a floodlit football match from the stands', 'Fikri Rasyid', 'xl7675LXTO0'),
   footballStadium: unsplash('football-stadium', 'A packed football stadium under floodlights', 'Howard Bouchevereau', 'yKHZ65nuEtE'),
   footballNight: unsplash('football-night', 'A football match in a stadium at night', 'Alex Simpson', 'DOicNPBVSHs'),

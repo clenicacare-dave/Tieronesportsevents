@@ -17,7 +17,8 @@ const pages = [
   '/quote',
   '/privacy',
   '/cookies',
-  '/terms'
+  '/terms',
+  '/booking-conditions'
 ];
 
 for (const path of pages) {
