@@ -35,7 +35,7 @@ export const viewport: Viewport = { themeColor: brand.themeColor, viewportFit: '
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-IE" className={`${heading.variable} ${body.variable}`}>
+    <html lang="en-IE" suppressHydrationWarning className={`${heading.variable} ${body.variable}`}>
       <body>{children}</body>
     </html>
   );

@@ -81,7 +81,8 @@ lib/nav.ts                 Header, footer and dock navigation
 components/                UI (see section 5)
 public/brand/              Logo badge and icons (originals in docs/brand-pack/)
 public/photos/             Photos as WebP (2000px and -sm 960px versions)
-tests/                     site.spec.ts (pages, journeys, SEO, headers), a11y.spec.ts (axe), gate.spec.ts
+public/video/              Intro film (1080p and 720p MP4, poster)
+tests/                     site.spec.ts (pages, journeys, SEO, headers), a11y.spec.ts (axe), gate.spec.ts, intro.spec.ts
 docs/                      This file, PROJECT.md, SIGN-OFF.md, DNS-MIGRATION.md, brand-pack/
 wrangler.jsonc             Worker config: account, routes, Email binding, vars
 open-next.config.ts        Static-assets incremental cache (see gotchas)
@@ -123,6 +124,22 @@ missing field fails the build.
     gradient repainted the whole hero every frame and ran at about 10fps. Draws nothing for reduced motion.
 - **Navigation:** full header nav from 1280px wide (`SiteHeader`); below that, a glass dock at the bottom
   (`MobileDock`: Home, Events, Sports, Quote, More) and the date and time in the header (`HeaderClock`).
+
+### Intro film
+
+`components/IntroFilm.tsx` plays "The Journey to the Game" (39s) full screen on a visitor's first visit to the
+home page or the holding page. Skip, Escape or the end of the film closes it and stores `t1-intro-seen` in
+localStorage; the "Watch the film" button (home hero, holding page) replays it. Browsers block autoplay with
+sound, so it tries with sound and falls back to muted with a "Sound on" button. It never autoplays for
+reduced-motion visitors. An inline script covers the page in navy before first paint on a first visit, so the
+page does not flash before the film (with a 4s CSS safety fade if scripts fail).
+
+Files in `public/video/`: `intro-1080.mp4` (H.264, about 4.2 Mbps, 21 MB) for wide screens and `intro-720.mp4`
+(about 2.2 Mbps, 11 MB) under 1100px or with data saver; `intro-poster.jpg` is the first frame. The original
+master is not in the repo (`uploads/` is git-ignored). Keep every file under the Workers static-asset limit of
+25 MiB. To replace the film, encode H.264 + AAC MP4s at those sizes (ffmpeg, HandBrake or any encoder), keep
+the file names, and re-run the tests. Tests start with the film marked as seen; `tests/intro.spec.ts` covers
+the first visit.
 
 ### Enquiry form
 
