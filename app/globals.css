@@ -241,3 +241,83 @@
 @media (prefers-reduced-motion: reduce) {
   .nav-link::after { transition: none; }
 }
+
+/* Intro film (components/IntroFilm.tsx). */
+/* First visit: navy cover before first paint until the film opens. Fades itself out after 4s if script fails. */
+html.intro-pending::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: rgb(var(--color-navy));
+  animation: intro-cover-safety 0.4s ease 4s forwards;
+}
+@keyframes intro-cover-safety {
+  to { opacity: 0; visibility: hidden; }
+}
+.intro-film {
+  animation: intro-in 0.5s ease both;
+}
+.intro-film-out {
+  animation: intro-out 0.6s ease both;
+}
+@keyframes intro-in {
+  from { opacity: 0; }
+}
+@keyframes intro-out {
+  to { opacity: 0; }
+}
+.intro-control {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgb(255 255 255 / 0.25);
+  background: rgb(var(--color-navy) / 0.55);
+  padding: 0 1.1rem;
+  font-family: var(--font-heading), sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #fff;
+  backdrop-filter: blur(8px);
+  transition: border-color 0.2s, color 0.2s;
+}
+.intro-control:hover {
+  border-color: rgb(var(--color-gold));
+  color: rgb(var(--color-gold));
+}
+.intro-replay {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-heading), sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #fff;
+  transition: color 0.2s;
+}
+.intro-replay:hover {
+  color: rgb(var(--color-gold));
+}
+.intro-replay-icon {
+  display: grid;
+  height: 2.25rem;
+  width: 2.25rem;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid rgb(var(--color-gold) / 0.7);
+  color: rgb(var(--color-gold));
+  padding-left: 2px;
+  transition: background-color 0.2s, color 0.2s;
+}
+.intro-replay:hover .intro-replay-icon {
+  background: rgb(var(--color-gold));
+  color: rgb(var(--color-navy));
+}
+@media (prefers-reduced-motion: reduce) {
+  .intro-film, .intro-film-out { animation: none; }
+}

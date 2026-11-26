@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { IntroFilm } from '@/components/IntroFilm';
 import { PhotoSlot } from '@/components/PhotoSlot';
 import { HeroRings } from '@/components/HeroRings';
 import { CtaBand, Eyebrow, EventCard, Section, SectionHeading, SportCard } from '@/components/ui';
@@ -37,6 +38,7 @@ export default function HomePage() {
             <Link href="/quote" className="btn-outline">
               Request a quote
             </Link>
+            <IntroFilm className="sm:ml-3" />
           </div>
         </div>
       </section>

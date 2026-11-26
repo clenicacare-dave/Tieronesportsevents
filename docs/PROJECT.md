@@ -15,7 +15,8 @@ Brief: `docs/brand-pack/prompts/CLAUDE.md`. Brand pack: `docs/brand-pack/`.
 | `/group-travel`, `/corporate-hospitality`, `/bespoke-trips` | Service pages from `content/services.ts` |
 | `/about`, `/how-it-works`, `/faqs`, `/travel-information` | Information |
 | `/contact`, `/quote` | Contact form and quote request (`/quote?event=slug` pre-selects the event) |
-| `/privacy`, `/cookies`, `/terms` | Draft legal pages, marked for legal review |
+| `/privacy`, `/cookies`, `/terms`, `/booking-conditions` | Draft legal pages, marked for legal review (booking conditions noindex until signed off) |
+| `/coming-soon` | Holding page the public sees while the site is gated (`middleware.ts`, `SITE_GATE`) |
 
 Testimonials and case studies are left out: none are genuine yet.
 
@@ -42,7 +43,7 @@ Testimonials and case studies are left out: none are genuine yet.
 
 ### Assumptions
 
-- The domain is **www.tieronesportsevents.com** (live), and the company uses .com only (confirmed 26 Nov 2026).
+- The domain is **www.tieronesportsevents.com** (deployed, gated behind a holding page until launch), and the company uses .com only (confirmed 26 Nov 2026).
 - Tier One is a company registered in Ireland. Its registered name, CRO number, registered office, VAT number and travel licence live in one place, `site.company` in `lib/site.ts`; while blank, pages show [placeholders] and the footer shows the brand name only. Irish company law requires the name, number and office on the website.
 - **Enquiries stay on.** The brief says to keep submission disabled until secure handling is approved; the existing form (Turnstile, honeypot, rate limit, consent, length limits, sent only to info@ and stored nowhere else) was already live and approved by the business. `site.enquiriesEnabled` turns it off in one line.
 - The supplied HTML prototype was used as a reference only; the site stays on the existing Next.js/React codebase (the brief prefers reusing a suitable stack over migrating).
@@ -69,7 +70,8 @@ Testimonials and case studies are left out: none are genuine yet.
 | Input validation | Required fields, email format, length limits, line breaks stripped from header-bound fields, HTML escaped in emails |
 | Data minimisation | Only contact details and trip basics; nothing stored on the site; emails go to info@ only |
 | Headers | CSP (self + Turnstile only), HSTS, `X-Frame-Options: DENY`, nosniff, referrer and permissions policies, no `X-Powered-By` |
-| Secrets | Worker secrets (`TURNSTILE_SECRET`, `CONTACT_FORM_TO`); none in the repo |
+| Secrets | Worker secrets (`TURNSTILE_SECRET`, `CONTACT_FORM_TO`, `PREVIEW_TOKEN`); none in the repo |
+| Pre-launch privacy | Holding page for the public, noindex everywhere, full site only via a private link cookie (fails closed) |
 | CI | Lint, typecheck, build, tests on every pull request |
 
 **Known risks**
@@ -123,7 +125,5 @@ Verify current terms before relying on these.
 
 ## 7. Handover
 
-- **Accounts (business-owned):** Cloudflare account `017c00b8853e00499d11447187100220` (dave@tieronesportsevents.com), GitHub `clenicacare-dave/Tieronesportsevents`, Blacknight (domain), Zoho (mail).
-- **Deploy:** see README. Preview with `opennextjs-cloudflare upload`; go live with `wrangler deploy`.
-- **Change content:** edit `content/*.ts`, run `npm run check`, open a pull request; CI must pass.
-- **DNS:** Zoho MX, SPF, DKIM and DMARC records at the apex must not be changed. Email Sending uses the `mail.` subdomain. History in `docs/DNS-MIGRATION.md`.
+The full developer handover (accounts, setup, architecture, configuration, gate runbook, release flow, rollback,
+DNS, gotchas and open items) is in [`docs/HANDOVER.md`](HANDOVER.md).

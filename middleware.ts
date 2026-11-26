@@ -45,5 +45,5 @@ export function middleware(req: NextRequest) {
 
 // Skip build assets and public files (photos, brand, icons): they are served before the Worker anyway.
 export const config = {
-  matcher: ['/((?!_next/|brand/|photos/|favicon.ico|.*\\.(?:png|webp|jpg|svg|ico|txt|webmanifest)$).*)', '/robots.txt']
+  matcher: ['/((?!_next/|brand/|photos/|favicon.ico|.*\\.(?:png|webp|jpg|svg|ico|txt|webmanifest|mp4)$).*)', '/robots.txt']
 };
