@@ -1,5 +1,8 @@
 # DNS records to carry from Blacknight to Cloudflare (captured 2026-11-24)
 
+> Historical record of the migration. The Vercel and Resend entries are no longer needed; the Zoho records still are.
+> Check the live zone in the Cloudflare dashboard for the current state. See `docs/HANDOVER.md`, section 8.
+
 Email must keep working, so every record below must exist in Cloudflare before the nameservers change.
 
 | Name | Type | Value | Proxy |

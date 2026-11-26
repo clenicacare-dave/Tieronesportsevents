@@ -1,15 +1,17 @@
 # Tier One Sports Events
 
 Website for Tier One Sports Events: sports travel for supporters, families, clubs and corporate groups from Ireland and the UK.
-Live at https://www.tieronesportsevents.com.
+Domain: https://www.tieronesportsevents.com. **Not public yet:** visitors see a holding page; the full site opens through a private link (see [docs/HANDOVER.md](docs/HANDOVER.md), section 6).
 
 **Phase 1** (this release): a content-led site with events, sports, group, corporate and bespoke travel, information pages, draft legal pages and an enquiry/quote form. No bookings, payments or accounts.
+
+**New developer? Start with [docs/HANDOVER.md](docs/HANDOVER.md)** (accounts, setup, architecture, release flow, runbooks, gotchas).
 
 Full project documentation (architecture, decisions, security, costs, data, roadmap, open decisions, handover): [docs/PROJECT.md](docs/PROJECT.md). Changes: [CHANGELOG.md](CHANGELOG.md).
 
 ## Stack
 
-Next.js 15 (App Router, React 19, TypeScript, Tailwind) on Cloudflare Workers via OpenNext. Every page is pre-rendered; only `/api/contact` runs code. Enquiries use Cloudflare Turnstile and Cloudflare Email Sending to `info@` (Zoho).
+Next.js 15 (App Router, React 19, TypeScript, Tailwind) on Cloudflare Workers via OpenNext. Every page is pre-rendered; only the pre-launch gate (`middleware.ts`) and `/api/contact` run code. Enquiries use Cloudflare Turnstile and Cloudflare Email Sending to `info@` (Zoho).
 
 ## Where things live
 
@@ -54,4 +56,6 @@ npx opennextjs-cloudflare upload   # preview version, not live
 npx wrangler deploy                # live
 ```
 
-Worker secrets: `TURNSTILE_SECRET`, `CONTACT_FORM_TO`. Public Turnstile site key: `.env.production`.
+Worker secrets: `TURNSTILE_SECRET`, `CONTACT_FORM_TO`, `PREVIEW_TOKEN`. Vars in `wrangler.jsonc`: `SITE_GATE`, `CONTACT_FORM_FROM`. Public Turnstile site key: `.env.production`.
+
+Run wrangler only from this folder. Full release steps, testing a gated deployment and rollback: [docs/HANDOVER.md](docs/HANDOVER.md), section 7.
