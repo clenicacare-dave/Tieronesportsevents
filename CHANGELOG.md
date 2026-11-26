@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.0 — Intro film and handover docs (2026-11-26)
+
+- Intro film "The Journey to the Game" plays full screen on a first visit (home page and holding page): Skip, Escape, sound toggle, progress bar; "Watch the film" replays it. No autoplay for reduced motion. 1080p and 720p encodes under the Workers asset limit.
+- Developer handover guide (`docs/HANDOVER.md`); README, PROJECT and DNS notes brought up to date.
+
 ## 0.6.0 — Holding page and private link (2026-11-26)
 
 - Public sees a "Coming soon" holding page on every address; the full site opens only through a private link (`/preview/<token>`, cookie for 90 days). Nothing is indexed while gated.
