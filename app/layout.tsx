@@ -3,6 +3,7 @@ import { Barlow_Condensed, Inter } from 'next/font/google';
 import './globals.css';
 import { brand } from '@/brand/brand';
 import { site } from '@/lib/site';
+import { editionDescription, isKids } from '@/lib/edition';
 
 // Fonts are downloaded at build time and served from this site: no runtime calls to Google.
 const heading = Barlow_Condensed({ subsets: ['latin'], weight: ['500', '600'], variable: '--font-heading', display: 'swap' });
@@ -10,8 +11,8 @@ const body = Inter({ subsets: ['latin'], variable: '--font-body', display: 'swap
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: { default: `${brand.name} | Sports travel from ${site.regions}`, template: `%s | ${brand.name}` },
-  description: `Sports travel for supporters, families, clubs and corporate groups from ${site.regions}: football, rugby, Grand Prix, golf and racing.`,
+  title: { default: isKids ? `${brand.name} | Youth football trips from ${site.regions}` : `${brand.name} | Sports travel from ${site.regions}`, template: `%s | ${brand.name}` },
+  description: editionDescription,
   applicationName: brand.name,
   alternates: { canonical: '/' },
   icons: {

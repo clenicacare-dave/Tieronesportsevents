@@ -1,8 +1,10 @@
 import type { Faq } from './types';
+import { isKids } from '@/lib/edition';
+import { kidsFaqs } from './kids/faqs';
 
 // Draft answers for Tier One to sign off. Items in [square brackets] need a business decision.
 // Answers about payments, cancellations and protection must match the booking conditions page.
-export const faqs: Faq[] = [
+export const fullFaqs: Faq[] = [
   {
     question: 'Who are Tier One Sports Events?',
     answer:
@@ -65,3 +67,6 @@ export const faqs: Faq[] = [
       'We use them only to reply to your enquiry and plan your trip. See our privacy notice for how long we keep them and your rights.'
   }
 ];
+
+// The FAQs for the edition being built (lib/edition.ts).
+export const faqs: Faq[] = isKids ? kidsFaqs : fullFaqs;

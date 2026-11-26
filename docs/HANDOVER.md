@@ -11,6 +11,10 @@ are drafts awaiting the business's sign-off (`docs/SIGN-OFF.md`). Events are sam
 
 ## 1. What the site is
 
+> **Two editions, one codebase.** `lib/edition.ts` picks which site is built. The default, **kids football**,
+> is what Tier One can sell now: youth football trips for clubs and academies, schools and families. The
+> **full** edition (every sport, corporate hospitality, bespoke trips) is kept intact for later. See section 5.
+
 A content-led brochure site for an Irish sports-travel company: events, sports, group, corporate and bespoke
 travel, information and legal pages, and one enquiry/quote form that emails `info@`. No bookings, payments,
 accounts or database. Every page is pre-rendered at build time; the only code that runs per request is the
@@ -82,7 +86,7 @@ components/                UI (see section 5)
 public/brand/              Logo badge and icons (originals in docs/brand-pack/)
 public/photos/             Photos as WebP (2000px and -sm 960px versions)
 public/video/              Intro film (1080p and 720p MP4, poster)
-tests/                     site.spec.ts (pages, journeys, SEO, headers), a11y.spec.ts (axe), gate.spec.ts, intro.spec.ts
+tests/                     edition-aware: site.spec.ts (pages, journeys, SEO, headers), a11y.spec.ts (axe), gate.spec.ts, intro.spec.ts
 docs/                      This file, PROJECT.md, SIGN-OFF.md, DNS-MIGRATION.md, brand-pack/
 wrangler.jsonc             Worker config: account, routes, Email binding, vars
 open-next.config.ts        Static-assets incremental cache (see gotchas)
@@ -90,6 +94,27 @@ next.config.mjs            Security headers / CSP, www redirect, legacy redirect
 ```
 
 ## 5. How the pieces work
+
+### Editions
+
+`lib/edition.ts` reads `NEXT_PUBLIC_SITE_EDITION` at build time: unset (default) builds **kids football**;
+`full` builds the multi-sport site. Build the full edition with
+`NEXT_PUBLIC_SITE_EDITION=full npx opennextjs-cloudflare build` (and set the same variable when running the
+tests, so they test the edition you built).
+
+| | Kids football (default) | Full |
+| --- | --- | --- |
+| Home | `components/KidsHome.tsx` | `FullHome` in `app/(site)/page.tsx` |
+| Trips / events | `content/kids/trips.ts` (list called "Trips", URL `/events`) | `fullEvents` in `content/events.ts` |
+| Audience / service pages | `/clubs-and-academies`, `/schools`, `/families` (`content/kids/audiences.ts`) | `/group-travel`, `/corporate-hospitality`, `/bespoke-trips` |
+| Sports pages | none (404) | `/sports`, `/sports/[slug]` |
+| FAQs | `content/kids/faqs.ts` | `fullFaqs` in `content/faqs.ts` |
+| Navigation, footer, dock | kids lists in `lib/nav.ts` | full lists in `lib/nav.ts` |
+| Quote form options | kids trips and audiences; kids group types | all events, sports and trip types |
+
+Pages outside the active edition return 404 and are left out of the sitemap, navigation and forms. Shared
+pages (About, How it works, Quote, legal, holding page, metadata) switch their copy with `isKids`. Legal
+pages are the same in both editions.
 
 ### Content
 

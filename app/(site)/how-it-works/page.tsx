@@ -1,17 +1,23 @@
 import type { Metadata } from 'next';
 import { CtaBand, PageHero, Section } from '@/components/ui';
 import { howItWorks } from '@/content/home';
+import { isKids } from '@/lib/edition';
 
 export const metadata: Metadata = {
   title: 'How it works',
-  description: 'From your first enquiry to the trip home: how Tier One plans sports travel.',
+  description: isKids
+    ? 'From your first enquiry to the trip home: how Tier One plans football trips for young players.'
+    : 'From your first enquiry to the trip home: how Tier One plans sports travel.',
   alternates: { canonical: '/how-it-works' }
 };
 
 const detail = [
   {
-    title: 'You tell us the occasion',
-    body: 'Send an enquiry with the sport or event, who is travelling, roughly when, and where from. A rough idea is enough to start. There is no account to create and nothing to pay.'
+    title: isKids ? 'You tell us about the trip' : 'You tell us the occasion',
+    body: (isKids
+      ? 'Send an enquiry with the age group or ages, how many players and adults, the tournament, camp or match in mind, roughly when, and where from.'
+      : 'Send an enquiry with the sport or event, who is travelling, roughly when, and where from.') +
+      ' A rough idea is enough to start. There is no account to create and nothing to pay.'
   },
   {
     title: 'We come back with options',

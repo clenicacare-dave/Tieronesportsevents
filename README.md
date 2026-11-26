@@ -5,6 +5,8 @@ Domain: https://www.tieronesportsevents.com. **Not public yet:** visitors see a 
 
 **Phase 1** (this release): a content-led site with events, sports, group, corporate and bespoke travel, information pages, draft legal pages and an enquiry/quote form. No bookings, payments or accounts.
 
+**Two editions:** the site builds as **kids football** (default, youth football trips only) or **full** (every sport) from one codebase; see `lib/edition.ts`.
+
 **New developer? Start with [docs/HANDOVER.md](docs/HANDOVER.md)** (accounts, setup, architecture, release flow, runbooks, gotchas).
 
 Full project documentation (architecture, decisions, security, costs, data, roadmap, open decisions, handover): [docs/PROJECT.md](docs/PROJECT.md). Changes: [CHANGELOG.md](CHANGELOG.md).

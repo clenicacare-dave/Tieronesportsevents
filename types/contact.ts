@@ -1,3 +1,5 @@
+import { isKids } from '@/lib/edition';
+
 export type EnquiryKind = 'contact' | 'quote';
 
 export interface ContactFormData {
@@ -18,15 +20,10 @@ export interface ContactFormData {
   turnstileToken?: string; // Cloudflare Turnstile token
 }
 
-export const groupTypes = [
-  'Just me or a couple',
-  'Friends',
-  'Family',
-  'Club or team',
-  'School or university',
-  'Supporters’ group',
-  'Corporate group'
-];
+// "Who is travelling?" options for each edition (lib/edition.ts).
+export const groupTypes = isKids
+  ? ['Club or academy squad', 'School team or group', 'Family', 'Something else']
+  : ['Just me or a couple', 'Friends', 'Family', 'Club or team', 'School or university', 'Supporters’ group', 'Corporate group'];
 
 // Server-side length limits (characters).
 export const fieldLimits: Record<string, number> = {

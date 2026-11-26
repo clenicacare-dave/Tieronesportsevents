@@ -58,6 +58,17 @@ Once name, number and office are in, the footer shows them, as Irish company law
 - [ ] Liability cap (legal review)
 - [ ] Complaint reply time; any dispute resolution scheme
 
+## Kids football (the edition going live first)
+
+- [ ] Age range Tier One will take (drafts say under-9s to under-18s for clubs and schools)
+- [ ] Safeguarding policy: who supervises, adult-to-child ratios, Garda vetting / DBS for any Tier One staff on trips
+- [ ] Is a Tier One contact on call during every trip?
+- [ ] Will Tier One provide template parental consent and medical forms?
+- [ ] Per-player payments for clubs and schools, or one payment from the organiser?
+- [ ] Name changes when a player drops out: allowed, and any fee
+- [ ] Real trips to replace the four samples (tournament, camp, school tour, family weekend): names, dates, what is included
+- [ ] Only name a real tournament once Tier One is entered or partnered with it
+
 ## FAQs
 
 - [ ] Fixture change answer matches the booking conditions

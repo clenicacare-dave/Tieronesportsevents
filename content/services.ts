@@ -2,7 +2,8 @@ import type { Photo } from './types';
 import { photos } from './photos';
 
 export interface Service {
-  slug: 'group-travel' | 'corporate-hospitality' | 'bespoke-trips';
+  // Full edition: group travel, corporate, bespoke. Kids football edition: the audience pages in content/kids/audiences.ts.
+  slug: 'group-travel' | 'corporate-hospitality' | 'bespoke-trips' | 'clubs-and-academies' | 'schools' | 'families';
   eyebrow: string;
   title: string;
   description: string; // meta description
@@ -13,7 +14,9 @@ export interface Service {
   ask: string[]; // what to tell us in an enquiry
 }
 
-export const services: Record<Service['slug'], Service> = {
+export type FullServiceSlug = 'group-travel' | 'corporate-hospitality' | 'bespoke-trips';
+
+export const services: Record<FullServiceSlug, Service> = {
   'group-travel': {
     slug: 'group-travel',
     photo: photos.fansScarves,

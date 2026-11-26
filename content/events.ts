@@ -1,6 +1,8 @@
 import type { Availability, TravelEvent } from './types';
 import { photos } from './photos';
 import { getSport } from './sports';
+import { isKids } from '@/lib/edition';
+import { kidsTrips } from './kids/trips';
 
 // SAMPLE CONTENT. Every event below is illustrative, for design review only.
 // None is an available package: no dates, prices, tickets or availability are confirmed.
@@ -14,7 +16,7 @@ const standardExclusions = [
   'Meals and drinks not listed as included'
 ];
 
-export const events: TravelEvent[] = [
+const fullEvents: TravelEvent[] = [
   {
     slug: 'six-nations-weekend-edinburgh',
     name: 'Six Nations weekend in Edinburgh',
@@ -142,6 +144,9 @@ export const events: TravelEvent[] = [
     verified: false
   }
 ];
+
+// The events for the edition being built (lib/edition.ts): kids football trips, or every sport.
+export const events: TravelEvent[] = isKids ? kidsTrips : fullEvents;
 
 export const availabilityLabel: Record<Availability, string> = {
   enquire: 'Enquire for availability',
