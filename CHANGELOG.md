@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.2 — Header (2026-11-26)
+
+- Menu in the logo's lettering, gold rule on hover and for the current page, divider before Request a quote; compact glass header on scroll; gold hairline underneath.
+
 ## 0.5.1 — Calmer rings (2026-11-26)
 
 - Desktop hero rings: slower (24s per ring), start just outside the badge and fade in; no static rings behind.
