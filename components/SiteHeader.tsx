@@ -2,19 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useRef } from 'react';
 import { Logo } from './Logo';
+import { HeaderClock } from './HeaderClock';
 import { mainNav } from '@/lib/nav';
 
 export function SiteHeader() {
   const pathname = usePathname();
-  const menu = useRef<HTMLDetailsElement>(null);
-
-  // Close the mobile menu after navigating.
-  useEffect(() => {
-    if (menu.current) menu.current.open = false;
-  }, [pathname]);
-
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
@@ -25,7 +18,7 @@ export function SiteHeader() {
       <div className="mx-auto flex max-w-site items-center justify-between gap-6 px-5 py-3 sm:px-8">
         <Logo />
 
-        <nav aria-label="Main" className="hidden lg:block">
+        <nav aria-label="Main" className="hidden xl:block">
           <ul className="flex items-center gap-7 text-[0.95rem]">
             {mainNav.map((item) => (
               <li key={item.href}>
@@ -42,36 +35,13 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <Link href="/quote" className="btn-gold hidden sm:inline-flex">
+          {/* Phones and tablets: date and time fill the space the old Menu button used. */}
+          <div className="xl:hidden">
+            <HeaderClock />
+          </div>
+          <Link href="/quote" className="btn-gold hidden xl:inline-flex">
             Request a quote
           </Link>
-
-          {/* Works without JavaScript */}
-          <details ref={menu} className="group relative lg:hidden">
-            <summary className="flex h-11 cursor-pointer list-none items-center gap-2 rounded-brand border border-white/25 px-3 text-sm font-semibold [&::-webkit-details-marker]:hidden">
-              <span aria-hidden="true" className="relative block h-3.5 w-5 border-y-2 border-current after:absolute after:left-0 after:top-1 after:h-0.5 after:w-5 after:bg-current" />
-              <span className="group-open:hidden">Menu</span>
-              <span className="hidden group-open:inline">Close</span>
-            </summary>
-            <nav aria-label="Mobile" className="fixed inset-x-0 top-[68px] max-h-[calc(100dvh-68px)] overflow-y-auto border-t border-white/10 bg-navy px-5 pb-8 pt-2 shadow-2xl">
-              <ul className="divide-y divide-white/10">
-                {[...mainNav, { href: '/about', label: 'About' }, { href: '/faqs', label: 'FAQs' }, { href: '/contact', label: 'Contact' }].map((item) => (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      aria-current={isActive(item.href) ? 'page' : undefined}
-                      className="flex min-h-[52px] items-center font-heading text-2xl uppercase tracking-wide text-white aria-[current=page]:text-gold"
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              <Link href="/quote" className="btn-gold mt-6 w-full justify-center">
-                Request a quote
-              </Link>
-            </nav>
-          </details>
         </div>
       </div>
     </header>

@@ -1,10 +1,21 @@
 @import '../brand/tokens.css';
 
+/* Animatable ring offset for the hero ripple (app/page.tsx). */
+@property --ring-o {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --glass-ink2: #c9d3df;
+    --glass-hi: rgb(255 255 255 / 0.12);
+  }
   html {
     color-scheme: light;
     -webkit-text-size-adjust: 100%;
@@ -45,13 +56,135 @@
       radial-gradient(ellipse at 80% 115%, rgb(var(--color-gold) / 0.22), transparent 55%),
       linear-gradient(165deg, rgb(var(--color-navy)) 35%, rgb(15 26 38));
   }
-  /* Home hero without a photo: rings radiating from the badge position. */
-  .hero-rings {
-    background-color: rgb(var(--color-navy));
+  /* Home hero (the approved look): deep navy shading into a warm gold glow behind the badge. */
+  .hero-glow {
     background-image:
-      repeating-radial-gradient(circle at 82% 50%, transparent 0 56px, rgb(var(--color-gold) / 0.09) 56px 57px),
-      radial-gradient(circle at 82% 50%, rgb(var(--color-gold) / 0.16), transparent 45%),
-      linear-gradient(165deg, rgb(var(--color-navy)) 40%, rgb(15 26 38));
+      radial-gradient(circle at 80% 50%, rgb(var(--color-gold) / 0.18), transparent 45%),
+      linear-gradient(90deg, rgb(var(--color-navy) / 0.97) 25%, rgb(var(--color-navy) / 0.72) 55%, rgb(var(--color-navy) / 0.5) 100%),
+      linear-gradient(180deg, rgb(15 26 38 / 0.35), transparent 30%, transparent 70%, rgb(15 26 38 / 0.55));
+  }
+  /* Gold rings centred on the badge, rippling outwards continuously and fading as they travel.
+     The ripple animates --ring-o (registered below) through one ring spacing (56px), then repeats. */
+  .hero-rings-anim {
+    border-radius: 9999px;
+    background-image: repeating-radial-gradient(
+      circle at center,
+      rgb(var(--color-gold) / 0.42) calc(var(--ring-o) - 56px),
+      rgb(var(--color-gold) / 0.42) calc(var(--ring-o) - 54.4px),
+      transparent calc(var(--ring-o) - 54.4px),
+      transparent var(--ring-o)
+    );
+    -webkit-mask-image: radial-gradient(circle at center, #000 8%, rgb(0 0 0 / 0.55) 35%, transparent 72%);
+    mask-image: radial-gradient(circle at center, #000 8%, rgb(0 0 0 / 0.55) 35%, transparent 72%);
+    animation: ring-ripple 3.2s linear infinite;
+  }
+  @keyframes ring-ripple {
+    from { --ring-o: 0px; }
+    to { --ring-o: 56px; }
+  }
+
+  /* Desktop hero: faint fixed fine lines (the approved texture) under eased moving rings. */
+  .hero-rings-still {
+    border-radius: 9999px;
+    background-image: repeating-radial-gradient(circle at center, transparent 0 56px, rgb(var(--color-gold) / 0.1) 56px 57px);
+    -webkit-mask-image: radial-gradient(circle at center, #000 45%, transparent 75%);
+    mask-image: radial-gradient(circle at center, #000 45%, transparent 75%);
+  }
+  /* Moving rings leave the badge fast and decelerate as they spread outwards, fading out.
+     Fourteen rings spread over a 12s cycle (negative delays so it starts full); the easing does fast-near, slow-far. */
+  .hero-ripple span {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 100%;
+    aspect-ratio: 1;
+    border: 1.5px solid rgb(var(--color-gold) / 0.5);
+    border-radius: 9999px;
+    translate: -50% -50%;
+    opacity: 0;
+    animation: ripple-out 12s cubic-bezier(0.22, 0.55, 0.4, 1) infinite;
+  }
+  @keyframes ripple-out {
+    0% { width: 100%; opacity: 0; }
+    3% { opacity: 0.9; }
+    60% { opacity: 0.4; }
+    100% { width: 520%; opacity: 0; }
+  }
+
+  /* Badge: slow float, and a light sweep across it, clipped to the circle. */
+  .hero-badge {
+    border-radius: 9999px;
+    animation: badge-float 7s ease-in-out infinite;
+  }
+  .hero-badge::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    pointer-events: none;
+    background: linear-gradient(115deg, transparent 35%, rgb(255 255 255 / 0.35) 48%, rgb(var(--color-gold) / 0.25) 52%, transparent 65%);
+    background-size: 250% 100%;
+    background-position: 130% 0;
+    mix-blend-mode: screen;
+    animation: badge-sweep 16s ease-in-out infinite;
+  }
+  @keyframes badge-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  @keyframes badge-sweep {
+    0%, 50% { background-position: 130% 0; }
+    88%, 100% { background-position: -30% 0; }
+  }
+
+  /* Gold rings laid over every photo, rising from the bottom-right corner. */
+  .photo-rings {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: repeating-radial-gradient(circle at 88% 115%, transparent 0 54px, rgb(var(--color-gold) / 0.2) 54px 55px);
+    -webkit-mask-image: radial-gradient(circle at 88% 115%, #000 20%, transparent 85%);
+    mask-image: radial-gradient(circle at 88% 115%, #000 20%, transparent 85%);
+  }
+  .photo-rings {
+    transform-origin: 88% 115%;
+    transition: transform 900ms ease-out, opacity 900ms ease-out;
+    opacity: 0.85;
+  }
+  /* Hovering a card or panel spreads its rings outward. */
+  .group:hover .photo-rings {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+  /* Larger photo panels: rings breathe very slowly. */
+  .photo-rings:not(.photo-rings-sm) {
+    animation: rings-drift 14s ease-in-out infinite;
+  }
+  @keyframes rings-drift {
+    0%, 100% { scale: 1; }
+    50% { scale: 1.05; }
+  }
+  .photo-rings-sm {
+    background-image: repeating-radial-gradient(circle at 88% 115%, transparent 0 26px, rgb(var(--color-gold) / 0.22) 26px 27px);
+  }
+  /* Navy glass for the phone dock and its menu sheet (components/MobileDock.tsx), after Swords Village.
+     The sheet is firmer glass so its text stays easy to read. Solid navy with "reduce transparency". */
+  .glass {
+    background: linear-gradient(160deg, rgb(var(--color-navy) / 0.74), rgb(15 26 38 / 0.82) 60%, rgb(var(--color-navy) / 0.78));
+    -webkit-backdrop-filter: blur(28px) saturate(160%);
+    backdrop-filter: blur(28px) saturate(160%);
+    border: 1px solid rgb(var(--color-gold) / 0.28);
+    box-shadow: 0 14px 34px rgb(5 12 22 / 0.4), 0 2px 6px rgb(5 12 22 / 0.25), inset 0 1.5px 0 rgb(255 255 255 / 0.22);
+  }
+  .glass-sheet {
+    background: linear-gradient(160deg, rgb(var(--color-navy) / 0.9), rgb(15 26 38 / 0.94));
+  }
+  .glass-pill {
+    background: rgb(255 255 255 / 0.16);
+    box-shadow: 0 1px 4px rgb(5 12 22 / 0.35), inset 0 1px 0 rgb(255 255 255 / 0.3);
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    .glass, .glass-sheet { background: rgb(var(--color-navy)); -webkit-backdrop-filter: none; backdrop-filter: none; }
   }
   .motif-soft::before {
     content: '';
@@ -81,6 +214,20 @@
   }
   .prose-t1 a {
     @apply font-medium text-navy underline decoration-gold decoration-2 underline-offset-4;
+  }
+}
+
+/* Panels rise a fifth of their height and fade in as they scroll into view (browsers with scroll-driven
+   animations: Chrome, Edge, Safari 26). Others simply show them. Off for prefers-reduced-motion. */
+@supports (animation-timeline: view()) {
+  .reveal {
+    animation: reveal-up linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 22%;
+  }
+  @keyframes reveal-up {
+    from { opacity: 0; translate: 0 20%; }
+    to { opacity: 1; translate: 0 0; }
   }
 }
 

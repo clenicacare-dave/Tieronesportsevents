@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { PhotoSlot } from './PhotoSlot';
 import { site } from '@/lib/site';
 import { sportName } from '@/content/sports';
-import { availabilityLabel } from '@/content/events';
+import { availabilityLabel, eventPhoto } from '@/content/events';
 import type { Sport, TravelEvent } from '@/content/types';
 
 export function Eyebrow({ children, tone = 'dark' }: { children: React.ReactNode; tone?: 'dark' | 'light' }) {
@@ -89,8 +89,8 @@ export function SectionHeading({
 
 export function EventCard({ event }: { event: TravelEvent }) {
   return (
-    <article className="group relative flex flex-col bg-white shadow-[0_1px_0_rgb(var(--color-line))]">
-      <PhotoSlot photo={event.photo} label={sportName(event.sport)} className="aspect-[4/3]" />
+    <article className="reveal group relative flex flex-col bg-white shadow-[0_1px_0_rgb(var(--color-line))] transition-[transform,box-shadow] duration-500 ease-out hover:-translate-y-1.5 hover:shadow-[0_18px_40px_-18px_rgb(var(--color-navy)/0.45)]">
+      <PhotoSlot photo={eventPhoto(event)} small label={sportName(event.sport)} className="aspect-[4/3]" />
       <div className="flex flex-1 flex-col border-t-[3px] border-gold p-6">
         <div className="flex items-center justify-between gap-3 text-xs font-semibold uppercase tracking-[0.16em] text-gold-dark">
           <span>{sportName(event.sport)}</span>
@@ -116,21 +116,40 @@ export function EventCard({ event }: { event: TravelEvent }) {
   );
 }
 
-export function SportCard({ sport, index }: { sport: Sport; index?: number }) {
+export function SportCard({ sport, index, className = '' }: { sport: Sport; index?: number; className?: string }) {
+  // The whole tile opens the sport (stretched title link); the Quote button sits above it.
   return (
-    <Link href={`/sports/${sport.slug}`} className="group relative block overflow-hidden bg-navy text-white">
-      <PhotoSlot photo={sport.photo} className="aspect-[3/4] transition duration-500 group-hover:scale-[1.03] sm:aspect-[4/5]" />
-      <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/30 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 p-6">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold">
+    <article className={`reveal group relative overflow-hidden bg-navy text-white ${className}`}>
+      <PhotoSlot photo={sport.photo} small className="aspect-[3/4] xl:aspect-[2/3]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/80 to-navy/5 transition-opacity duration-500 group-hover:opacity-90" />
+      <div className="absolute inset-x-0 bottom-0 p-5 transition-transform duration-500 ease-out [@media(hover:hover)]:translate-y-2 [@media(hover:hover)]:group-hover:translate-y-0">
+        <p className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-gold sm:text-xs">
           {index !== undefined && `${String(index + 1).padStart(2, '0')} / `}
           {sport.name}
         </p>
-        <h3 className="mt-2 font-heading text-3xl font-semibold uppercase leading-none">{sport.tile.title}</h3>
+        <h3 className="mt-2 font-heading text-[1.75rem] font-semibold uppercase leading-none">
+          <Link href={`/sports/${sport.slug}`} className="after:absolute after:inset-0 focus-visible:outline-none">
+            {sport.tile.title}
+          </Link>
+        </h3>
         <p className="mt-2 text-sm leading-6 text-white/80">{sport.tile.line}</p>
-        <span className="mt-4 inline-block h-[2px] w-10 bg-gold transition-all group-hover:w-16" />
+        <div className="mt-4 flex gap-2">
+          <span
+            aria-hidden="true"
+            className="inline-flex min-h-[38px] items-center gap-1.5 whitespace-nowrap rounded-brand bg-gold px-3 text-sm font-semibold text-navy transition group-hover:bg-white group-hover:shadow-[0_0_24px_rgb(var(--color-gold)/0.55)]"
+          >
+            Explore
+            <span className="transition-transform duration-500 group-hover:translate-x-0.5">→</span>
+          </span>
+          <Link
+            href={`/quote?event=${sport.slug}`}
+            className="relative z-10 inline-flex min-h-[38px] items-center rounded-brand border border-white/40 px-3 text-sm font-semibold text-white transition hover:border-gold hover:text-gold"
+          >
+            Quote<span className="sr-only"> for {sport.name.toLowerCase()}</span>
+          </Link>
+        </div>
       </div>
-    </Link>
+    </article>
   );
 }
 

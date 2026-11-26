@@ -55,8 +55,9 @@ Testimonials and case studies are left out: none are genuine yet.
 - **Logo lockup is the badge plus live text.** The supplied SVG lockups embed a 300 KB PNG; the header uses a 4 KB WebP badge and text in the brand font. The badge artwork is unchanged.
 - **Fonts self-hosted** via `next/font` (Barlow Condensed, Inter; OFL). Downloaded at build time; visitors never contact Google.
 - **Images unoptimised by Next** (Cloudflare Images would cost money). Add photos pre-sized as WebP: hero 2400×1000, cards 1200×900.
+- **Phone and tablet navigation (below 1280px):** a floating navy-glass dock at the bottom (Home, Events, Sports, Quote, More) and a three-quarter menu sheet behind More, ported from Swords Village (its decision #45). At most four destinations plus More, per the Project OS mobile-shell rule. The Project OS PWA half (install, offline) was not adopted: this is a brochure site, not a task app.
 - **No analytics or cookies**, so no consent banner. Cloudflare Web Analytics (cookieless, free) can be added later if wanted.
-- **Photography:** none supplied or licensed. Every photo slot (`photo` on events, sports, services, `content/home.ts`) falls back to a navy-and-gold stadium-lines motif.
+- **Photography:** 11 free photos from Unsplash (Unsplash License: commercial use, no attribution required; photographers credited on the image). Each photo's source and photographer is listed in `content/photos.ts`. Chosen to avoid crests, sponsors and recognisable players; perimeter advertising is faintly visible in the hero. Events without their own photo use their sport's. Any slot without a photo falls back to the navy-and-gold motif. Replace with commissioned or licensed event photography when budget allows.
 
 ## 3. Security and risk
 
@@ -111,7 +112,7 @@ Verify current terms before relying on these.
 1. **Domain:** register `tieronesportsevents.ie`, and if so, which is primary?
 2. **Enquiries:** confirm the live form is approved "secure handling", or switch it off until Phase 0 governance is done.
 3. **Customer acknowledgement email:** accept none, or upgrade the Cloudflare account to Workers Paid.
-4. **Photography:** budget and source for licensed images (hero, five sports, three services, each event).
+4. **Photography:** free Unsplash photos are in place; decide whether to commission or license event-specific photography later.
 5. **Real events:** which events, dates, inclusions and prices to publish; who confirms them.
 6. **Legal:** entity name, registration, lawful basis, retention period, booking terms, package travel obligations and bonding; independent legal review.
 7. **About page:** company details, people and story.

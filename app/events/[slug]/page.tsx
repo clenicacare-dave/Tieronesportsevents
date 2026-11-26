@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { PhotoSlot } from '@/components/PhotoSlot';
 import { Breadcrumbs, CtaBand, EventCard, Eyebrow, JsonLd, SampleLabel, formatPrice } from '@/components/ui';
-import { availabilityLabel, events, eventsForSport, getEvent } from '@/content/events';
+import { availabilityLabel, eventPhoto, events, eventsForSport, getEvent } from '@/content/events';
 import { sportName } from '@/content/sports';
 import { brand } from '@/brand/brand';
 import { absoluteUrl, site } from '@/lib/site';
@@ -47,8 +47,9 @@ export default async function EventPage({ params }: Props) {
   return (
     <>
       <section className="relative isolate overflow-hidden bg-navy text-white">
-        <PhotoSlot photo={event.photo} label={sportName(event.sport)} priority sizes="100vw" className="absolute inset-0 -z-10" />
+        <PhotoSlot photo={eventPhoto(event)} label={sportName(event.sport)} rings={false} priority sizes="100vw" className="absolute inset-0 -z-10" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-navy via-navy/85 to-navy/20" />
+        <div aria-hidden="true" className="photo-rings -z-10" />
         <div className="mx-auto max-w-site px-5 pb-16 pt-12 sm:px-8 sm:pb-24 sm:pt-16">
           <Breadcrumbs items={[{ href: '/events', label: 'Events' }, { label: event.name }]} />
           <div className="flex items-center gap-3 text-gold">
@@ -157,7 +158,7 @@ export default async function EventPage({ params }: Props) {
             location: { '@type': 'Place', name: event.venue, address: `${event.location}, ${event.country}` },
             organizer: { '@type': 'Organization', name: brand.name, url: site.url },
             url: absoluteUrl(`/events/${event.slug}`),
-            ...(event.photo ? { image: absoluteUrl(event.photo.src) } : {})
+            ...(eventPhoto(event) ? { image: absoluteUrl(eventPhoto(event)!.src) } : {})
           }}
         />
       )}

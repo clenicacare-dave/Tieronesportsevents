@@ -1,8 +1,10 @@
 import type { Sport, SportSlug } from './types';
+import { photos } from './photos';
 
 export const sports: Sport[] = [
   {
     slug: 'football',
+    photo: photos.footballStadium,
     tile: { title: 'Football weekends', line: 'UK and European matchday experiences.' },
     name: 'Football',
     headline: 'Football weekends and club tours',
@@ -17,6 +19,7 @@ export const sports: Sport[] = [
   },
   {
     slug: 'rugby',
+    photo: photos.rugbyPosts,
     tile: { title: 'Rugby experiences', line: 'International and club rugby.' },
     name: 'Rugby',
     headline: 'International and club rugby',
@@ -31,6 +34,7 @@ export const sports: Sport[] = [
   },
   {
     slug: 'motorsport',
+    photo: photos.motorsportTrack,
     tile: { title: 'Grand Prix travel', line: 'Iconic racing destinations.' },
     name: 'Motorsport',
     headline: 'Grand Prix travel',
@@ -41,6 +45,7 @@ export const sports: Sport[] = [
   },
   {
     slug: 'golf',
+    photo: photos.golfLinks,
     tile: { title: 'Golf experiences', line: 'Tournament and group travel.' },
     name: 'Golf',
     headline: 'Golf breaks and tournament travel',
@@ -51,6 +56,7 @@ export const sports: Sport[] = [
   },
   {
     slug: 'racing',
+    photo: photos.racingHorses,
     tile: { title: 'Racing festivals', line: 'The big festivals in Ireland and the UK.' },
     name: 'Racing',
     headline: 'Festival racing',

@@ -1,4 +1,6 @@
 import type { Availability, TravelEvent } from './types';
+import { photos } from './photos';
+import { getSport } from './sports';
 
 // SAMPLE CONTENT. Every event below is illustrative, for design review only.
 // None is an available package: no dates, prices, tickets or availability are confirmed.
@@ -114,6 +116,7 @@ export const events: TravelEvent[] = [
     availability: 'enquire',
     notices: [sampleNotice],
     audiences: ['Clubs', 'Schools', 'Academies', 'Universities'],
+    photo: photos.footballNight,
     sample: true,
     verified: false
   },
@@ -134,6 +137,7 @@ export const events: TravelEvent[] = [
     availability: 'enquire',
     notices: [sampleNotice],
     audiences: ['Golf societies', 'Friends', 'Corporate groups'],
+    photo: photos.golfSunset,
     sample: true,
     verified: false
   }
@@ -146,6 +150,9 @@ export const availabilityLabel: Record<Availability, string> = {
   'sold-out': 'Sold out',
   'not-on-sale': 'Not yet on sale'
 };
+
+// An event without its own photo uses its sport's photo.
+export const eventPhoto = (e: TravelEvent) => e.photo ?? getSport(e.sport)?.photo;
 
 export const getEvent = (slug: string) => events.find((e) => e.slug === slug);
 export const featuredEvents = () => events.filter((e) => e.featured);

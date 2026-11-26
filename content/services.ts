@@ -1,4 +1,5 @@
 import type { Photo } from './types';
+import { photos } from './photos';
 
 export interface Service {
   slug: 'group-travel' | 'corporate-hospitality' | 'bespoke-trips';
@@ -15,6 +16,7 @@ export interface Service {
 export const services: Record<Service['slug'], Service> = {
   'group-travel': {
     slug: 'group-travel',
+    photo: photos.fansScarves,
     eyebrow: 'Group travel',
     title: 'Your trip. Your team. Your way.',
     description: 'Sports trips for clubs, schools, supporters’ groups and friends from Ireland and the UK.',
@@ -39,6 +41,7 @@ export const services: Record<Service['slug'], Service> = {
   },
   'corporate-hospitality': {
     slug: 'corporate-hospitality',
+    photo: photos.hospitality,
     eyebrow: 'Corporate hospitality',
     title: 'Hosting at the highest level',
     description: 'Sports travel and hospitality for corporate groups, clients and teams from Ireland and the UK.',
@@ -63,6 +66,7 @@ export const services: Record<Service['slug'], Service> = {
   },
   'bespoke-trips': {
     slug: 'bespoke-trips',
+    photo: photos.travelWing,
     eyebrow: 'Bespoke trips',
     title: 'If you can picture it, ask',
     description: 'Tailor-made sports trips: a milestone birthday, a once-in-a-lifetime fixture or a sporting bucket list.',

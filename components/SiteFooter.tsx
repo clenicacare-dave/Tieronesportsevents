@@ -33,7 +33,8 @@ export function SiteFooter() {
         ))}
       </div>
       <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-site flex-col gap-2 px-5 py-6 text-sm text-white/60 sm:flex-row sm:justify-between sm:px-8">
+        {/* Extra bottom space below 1280px so the floating dock never covers the footer. */}
+        <div className="mx-auto flex max-w-site flex-col gap-2 px-5 pb-[calc(6.5rem+env(safe-area-inset-bottom))] pt-6 text-sm text-white/60 sm:flex-row sm:justify-between sm:px-8 xl:pb-6">
           <p>
             © {new Date().getFullYear()} {brand.name}
           </p>

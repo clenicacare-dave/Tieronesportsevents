@@ -18,7 +18,8 @@ export default defineConfig({
   },
   projects: [
     { name: 'desktop', use: { viewport: { width: 1366, height: 900 } } },
-    { name: 'mobile', use: { ...devices['Pixel 7'], channel: process.env.CI ? undefined : 'chrome' } }
+    { name: 'mobile', use: { ...devices['Pixel 7'], channel: process.env.CI ? undefined : 'chrome' } },
+    { name: 'tablet', use: { ...devices['iPad (gen 7) landscape'], defaultBrowserType: 'chromium', channel: process.env.CI ? undefined : 'chrome' } }
   ],
   // Tests the production build (run `npm run build` first).
   webServer: remote ? undefined : { command: `npx next start -p ${port}`, port, reuseExistingServer: !process.env.CI }

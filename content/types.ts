@@ -3,7 +3,8 @@
 export interface Photo {
   src: string; // path under public/, e.g. /photos/murrayfield.webp (licensed images only)
   alt: string;
-  credit?: string; // photographer / licence, shown under the image
+  credit?: string; // photographer / licence, shown on the image
+  source?: string; // where it came from, for the licence record
 }
 
 export type SportSlug = 'football' | 'rugby' | 'motorsport' | 'golf' | 'racing';
