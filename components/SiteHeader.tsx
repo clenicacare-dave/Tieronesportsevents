@@ -11,7 +11,7 @@ export function SiteHeader() {
   const pathname = usePathname();
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
-  // Compact, glassy header once the page has scrolled.
+  // Glassy header once the page has scrolled. Its height never changes, so the page never jumps.
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -28,9 +28,7 @@ export function SiteHeader() {
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-gold focus:px-4 focus:py-2 focus:text-navy">
         Skip to content
       </a>
-      <div
-        className={`mx-auto flex max-w-site items-center justify-between gap-6 px-5 transition-[padding] duration-300 sm:px-8 ${scrolled ? 'py-2' : 'py-3 xl:py-4'}`}
-      >
+      <div className="mx-auto flex max-w-site items-center justify-between gap-6 px-5 py-3 sm:px-8">
         <Logo />
 
         <div className="flex items-center gap-3 xl:gap-8">

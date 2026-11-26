@@ -127,15 +127,16 @@ missing field fails the build.
 
 ### Intro film
 
-`components/IntroFilm.tsx` plays "The Journey to the Game" (39s) full screen on a visitor's first visit to the
-home page or the holding page. Skip, Escape or the end of the film closes it and stores `t1-intro-seen` in
-localStorage; the "Watch the film" button (home hero, holding page) replays it. Browsers block autoplay with
-sound, so it tries with sound and falls back to muted with a "Sound on" button. It never autoplays for
-reduced-motion visitors. An inline script covers the page in navy before first paint on a first visit, so the
-page does not flash before the film (with a 4s CSS safety fade if scripts fail).
+`components/IntroFilm.tsx` shows "The Journey to the Game" (39s). On a visitor's first visit to the home page
+or the holding page, a small muted player slides into the bottom corner after 1.2 seconds (above the phone dock
+on site pages), so the page is seen first. Expand opens it full screen with sound; Shrink or Escape returns it to
+the corner; Close or the end of the film dismisses it and stores `t1-intro-seen` in localStorage. "Watch the
+film" (home hero, holding page) opens it full screen at any time. Browsers may block sound until the visitor
+interacts, so the sound button is always there. It never autoplays for reduced-motion visitors. While it plays,
+`HeroRings` draws at half rate (a `t1:film` window event) so slower devices can keep up.
 
-Files in `public/video/`: `intro-1080.mp4` (H.264, about 4.2 Mbps, 21 MB) for wide screens and `intro-720.mp4`
-(about 2.2 Mbps, 11 MB) under 1100px or with data saver; `intro-poster.jpg` is the first frame. The original
+Files in `public/video/`: `intro-1080.mp4` (H.264, about 4.2 Mbps, 21 MB) for full screen on screens 1100px and wider, and `intro-720.mp4`
+(about 2.2 Mbps, 11 MB) for the small player, phones and data saver (it swaps at the same moment on expand); `intro-poster.jpg` is the first frame. The original
 master is not in the repo (`uploads/` is git-ignored). Keep every file under the Workers static-asset limit of
 25 MiB. To replace the film, encode H.264 + AAC MP4s at those sizes (ffmpeg, HandBrake or any encoder), keep
 the file names, and re-run the tests. Tests start with the film marked as seen; `tests/intro.spec.ts` covers

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function ComingSoon() {
   return (
-    <main id="main" className="relative isolate flex min-h-[100svh] items-center justify-center overflow-hidden bg-navy px-6 py-16 text-center text-white">
+    <main id="main" className="relative isolate flex min-h-[100svh] items-center justify-center overflow-hidden bg-navy px-6 pb-48 pt-16 text-center sm:pb-16 text-white">
       <HeroRings centred />
       <div className="flex max-w-xl flex-col items-center">
         {/* eslint-disable-next-line @next/next/no-img-element */}

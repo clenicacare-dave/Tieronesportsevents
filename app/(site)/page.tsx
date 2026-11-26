@@ -38,7 +38,7 @@ export default function HomePage() {
             <Link href="/quote" className="btn-outline">
               Request a quote
             </Link>
-            <IntroFilm className="sm:ml-3" />
+            <IntroFilm className="sm:ml-3" aboveDock />
           </div>
         </div>
       </section>

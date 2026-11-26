@@ -242,51 +242,85 @@
   .nav-link::after { transition: none; }
 }
 
-/* Intro film (components/IntroFilm.tsx). */
-/* First visit: navy cover before first paint until the film opens. Fades itself out after 4s if script fails. */
-html.intro-pending::after {
-  content: '';
+/* Intro film (components/IntroFilm.tsx): a small player in the corner that expands to full screen. */
+.intro-player {
   position: fixed;
-  inset: 0;
-  z-index: 99;
+  z-index: 100;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  width: min(64vw, 300px);
+  animation: intro-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+/* Pages with the phone dock: sit above it. */
+.intro-player.intro-above-dock {
+  bottom: calc(92px + env(safe-area-inset-bottom));
+}
+@media (min-width: 640px) {
+  .intro-player { right: 24px; bottom: 24px; width: 360px; }
+}
+@media (min-width: 1280px) {
+  .intro-player.intro-above-dock { bottom: 24px; }
+}
+.intro-frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 14px;
+  border: 1px solid rgb(var(--color-gold) / 0.45);
   background: rgb(var(--color-navy));
-  animation: intro-cover-safety 0.4s ease 4s forwards;
+  box-shadow: 0 24px 50px -18px rgb(0 0 0 / 0.65);
 }
-@keyframes intro-cover-safety {
-  to { opacity: 0; visibility: hidden; }
+.intro-player[data-mode='full'] {
+  inset: 0;
+  width: auto;
+  background: rgb(var(--color-navy));
+  animation: intro-fade 0.35s ease both;
 }
-.intro-film {
-  animation: intro-in 0.5s ease both;
+.intro-player[data-mode='full'] .intro-frame {
+  height: 100%;
+  aspect-ratio: auto;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
-.intro-film-out {
-  animation: intro-out 0.6s ease both;
+.intro-bar {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 1.5rem 0.4rem 0.3rem;
+  background: linear-gradient(to top, rgb(var(--color-navy) / 0.85), transparent);
+}
+.intro-player[data-mode='full'] .intro-bar {
+  gap: 0.75rem;
+  padding: 3rem 1.5rem calc(1rem + env(safe-area-inset-bottom));
+}
+.intro-icon-btn {
+  display: grid;
+  height: 44px;
+  width: 44px;
+  flex: none;
+  place-items: center;
+  border-radius: 999px;
+  color: #fff;
+  transition: color 0.2s, background-color 0.2s;
+}
+.intro-icon-btn:hover {
+  color: rgb(var(--color-gold));
+  background: rgb(255 255 255 / 0.08);
+}
+.intro-leaving {
+  animation: intro-out 0.35s ease both;
 }
 @keyframes intro-in {
+  from { opacity: 0; transform: translateY(24px) scale(0.96); }
+}
+@keyframes intro-fade {
   from { opacity: 0; }
 }
 @keyframes intro-out {
-  to { opacity: 0; }
-}
-.intro-control {
-  display: inline-flex;
-  min-height: 44px;
-  align-items: center;
-  gap: 0.6rem;
-  border-radius: 999px;
-  border: 1px solid rgb(255 255 255 / 0.25);
-  background: rgb(var(--color-navy) / 0.55);
-  padding: 0 1.1rem;
-  font-family: var(--font-heading), sans-serif;
-  font-size: 0.85rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #fff;
-  backdrop-filter: blur(8px);
-  transition: border-color 0.2s, color 0.2s;
-}
-.intro-control:hover {
-  border-color: rgb(var(--color-gold));
-  color: rgb(var(--color-gold));
+  to { opacity: 0; transform: translateY(12px); }
 }
 .intro-replay {
   display: inline-flex;
@@ -319,5 +353,5 @@ html.intro-pending::after {
   color: rgb(var(--color-navy));
 }
 @media (prefers-reduced-motion: reduce) {
-  .intro-film, .intro-film-out { animation: none; }
+  .intro-player, .intro-leaving { animation: none; }
 }

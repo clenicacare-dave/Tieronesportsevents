@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { FILM_EVENT } from './IntroFilm';
 
 // Gold rings moving out from the T1 badge on the home hero, drawn on one canvas.
 // Desktop (1280px+): rings drift out from the badge, slowing as they spread and fading out (24s life each).
@@ -31,6 +32,7 @@ export function HeroRings({ centred = false }: { centred?: boolean }) {
     let r0 = 0; // badge radius (desktop)
     let frame = 0;
     let visible = true;
+    let filmPlaying = false;
 
     const measure = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -90,11 +92,15 @@ export function HeroRings({ centred = false }: { centred?: boolean }) {
       }
     };
 
+    let last = 0;
     const tick = (now: number) => {
-      ctx.clearRect(0, 0, w, h);
-      const s = now / 1000;
-      if (r0 > 0) drawWide(s);
-      else drawNarrow(s);
+      if (!filmPlaying || now - last > 30) {
+        last = now;
+        ctx.clearRect(0, 0, w, h);
+        const s = now / 1000;
+        if (r0 > 0) drawWide(s);
+        else drawNarrow(s);
+      }
       frame = visible ? requestAnimationFrame(tick) : 0;
     };
 
@@ -118,13 +124,27 @@ export function HeroRings({ centred = false }: { centred?: boolean }) {
     seen.observe(section);
     wide.addEventListener('change', measure);
 
+    // While the intro film plays, the rings draw at half rate (they move slowly, so it still looks smooth),
+    // leaving the device free to play the film.
+    const onFilm = (e: Event) => {
+      filmPlaying = (e as CustomEvent<{ playing: boolean }>).detail.playing;
+    };
+    window.addEventListener(FILM_EVENT, onFilm);
+
     return () => {
       cancelAnimationFrame(frame);
       resize.disconnect();
       seen.disconnect();
       wide.removeEventListener('change', measure);
+      window.removeEventListener(FILM_EVENT, onFilm);
     };
   }, [centred]);
 
-  return <canvas ref={ref} aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 h-full w-full" />;
+  return (
+    <canvas
+      ref={ref}
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 -z-10 h-full w-full"
+    />
+  );
 }
