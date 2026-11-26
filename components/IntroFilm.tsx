@@ -4,12 +4,12 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 // The intro film, "The Journey to the Game" (39s).
-// First visit (home page and holding page): a small muted player slides into the corner a moment after the
-// page has loaded, so the page itself is seen first. Expand opens it full screen (with sound); Shrink or
-// Escape returns it to the corner; Close or the end of the film dismisses it and remembers that it was seen
-// (localStorage). The "Watch the film" button opens it full screen at any time.
-// Never autoplays for reduced motion. Rendered into <body> through a portal, so no stacking context on the
-// page can trap it under the header.
+// First visit (home page and holding page): a moment after the page has loaded, the film opens centred and
+// large ("stage", muted until the visitor turns sound on). When it ends, it shrinks into a small player in the
+// corner, resting on the closing badge frame, and is remembered as seen (localStorage); press play there to
+// watch again, or close it. Shrink, Escape or a click outside sends it to the corner early; Expand goes full
+// screen. "Watch the film" opens it centred at any time. Never autoplays for reduced motion.
+// Rendered into <body> through a portal, so no stacking context on the page can trap it under the header.
 
 export const INTRO_SEEN_KEY = 't1-intro-seen';
 export const FILM_EVENT = 't1:film';
@@ -18,34 +18,32 @@ const FILM = {
   small: '/video/intro-720.mp4',
   poster: '/video/intro-poster.jpg'
 };
-const AUTO_DELAY_MS = 1200;
+const AUTO_DELAY_MS = 1000;
 
-type Mode = 'closed' | 'mini' | 'full';
+type Mode = 'closed' | 'stage' | 'mini' | 'full';
 
-// The small player always uses the 720p file; full screen on a large screen (without data saver) uses 1080p.
-const pickSource = (full: boolean) =>
-  full && window.innerWidth >= 1100 && !(navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData
-    ? FILM.large
-    : FILM.small;
+const saveData = () => !!(navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
+// 1080p for the big views on large screens; 720p for phones, data saver and the small player.
+const pickSource = () => (window.innerWidth >= 1100 && !saveData() ? FILM.large : FILM.small);
 
-// Tells the page the film is playing, so other animation (HeroRings) can rest while it does.
+// Tells the page the film is playing, so other animation (HeroRings) can ease off while it does.
 const announce = (playing: boolean) => window.dispatchEvent(new CustomEvent(FILM_EVENT, { detail: { playing } }));
+
+const markSeen = () => {
+  try {
+    localStorage.setItem(INTRO_SEEN_KEY, '1');
+  } catch {}
+};
 
 export function IntroFilm({ className = '', aboveDock = false }: { className?: string; aboveDock?: boolean }) {
   const [mode, setMode] = useState<Mode>('closed');
   const [leaving, setLeaving] = useState(false);
   const [muted, setMuted] = useState(true);
+  const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const video = useRef<HTMLVideoElement>(null);
-  const opener = useRef<HTMLButtonElement>(null);
   const firstControl = useRef<HTMLButtonElement>(null);
-  const startWith = useRef<{ sound: boolean }>({ sound: false });
-
-  const markSeen = () => {
-    try {
-      localStorage.setItem(INTRO_SEEN_KEY, '1');
-    } catch {}
-  };
+  const withSound = useRef(false);
 
   const close = useCallback(() => {
     markSeen();
@@ -54,20 +52,31 @@ export function IntroFilm({ className = '', aboveDock = false }: { className?: s
       video.current?.pause();
       setMode('closed');
       setLeaving(false);
-      announce(false);
       setProgress(0);
+      announce(false);
     }, 350);
   }, []);
+
+  const play = (fromStart = false) => {
+    const v = video.current;
+    if (!v) return;
+    if (fromStart || v.ended) v.currentTime = 0;
+    v.play().catch(() => {
+      v.muted = true;
+      setMuted(true);
+      v.play().catch(() => {});
+    });
+  };
 
   const setSound = (on: boolean) => {
     const v = video.current;
     if (!v) return;
     v.muted = !on;
     setMuted(!on);
-    if (v.paused) v.play().catch(() => {});
+    if (v.paused) play();
   };
 
-  // First visit: slide the small player in once the page has had a moment on screen.
+  // First visit: open centred once the page has had a moment on screen.
   useEffect(() => {
     let seen = false;
     try {
@@ -75,8 +84,8 @@ export function IntroFilm({ className = '', aboveDock = false }: { className?: s
     } catch {}
     if (seen || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const t = window.setTimeout(() => {
-      startWith.current = { sound: false };
-      setMode('mini');
+      withSound.current = false;
+      setMode('stage');
     }, AUTO_DELAY_MS);
     return () => window.clearTimeout(t);
   }, []);
@@ -87,61 +96,54 @@ export function IntroFilm({ className = '', aboveDock = false }: { className?: s
     if (!isOpen) return;
     const v = video.current;
     if (!v) return;
-    v.src = pickSource(startWith.current.sound);
-    v.currentTime = 0;
-    announce(true);
-    v.muted = !startWith.current.sound;
+    v.src = pickSource();
+    v.muted = !withSound.current;
     setMuted(v.muted);
-    v.play().catch(() => {
-      v.muted = true;
-      setMuted(true);
-      v.play().catch(() => {});
-    });
+    announce(true);
+    play(true);
   }, [isOpen]);
 
-  // Full screen: lock scrolling (without the page shifting), focus the controls, Escape shrinks.
+  // Centred and full screen are modal: lock scrolling (without the page shifting), focus the controls,
+  // Escape steps down (full -> centred -> corner).
+  const modal = mode === 'stage' || mode === 'full';
   useEffect(() => {
-    if (mode !== 'full') return;
+    if (!modal) return;
     const gap = window.innerWidth - document.documentElement.clientWidth;
     const { overflow, paddingRight } = document.body.style;
     document.body.style.overflow = 'hidden';
     if (gap > 0) document.body.style.paddingRight = `${gap}px`;
-    firstControl.current?.focus({ preventScroll: true });
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setMode('mini');
+    // Move focus into the player only when the visitor opened it (not on the automatic first play).
+    if (withSound.current) firstControl.current?.focus({ preventScroll: true });
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMode((m) => (m === 'full' ? 'stage' : 'mini'));
+    };
     window.addEventListener('keydown', onKey);
     return () => {
       document.body.style.overflow = overflow;
       document.body.style.paddingRight = paddingRight;
       window.removeEventListener('keydown', onKey);
     };
-  }, [mode]);
+  }, [modal]);
 
-  const openFull = () => {
-    if (mode === 'closed') {
-      startWith.current = { sound: true };
-      setMode('full');
-    } else {
-      setMode('full');
-      setSound(true);
-      // Swap to the sharper file at the same moment of the film.
-      const v = video.current;
-      const want = pickSource(true);
-      if (v && !v.currentSrc.endsWith(want)) {
-        const at = v.currentTime;
-        v.src = want;
-        v.addEventListener(
-          'loadedmetadata',
-          () => {
-            v.currentTime = at;
-            v.play().catch(() => {});
-          },
-          { once: true }
-        );
-      }
-    }
+  // The first play has ended: shrink to the corner and rest on the closing frame.
+  const onEnded = () => {
+    markSeen();
+    setPlaying(false);
+    if (mode !== 'mini') setMode('mini');
   };
 
-  const full = mode === 'full';
+  // From the corner (or the page button), open centred and play with sound.
+  const openStage = () => {
+    if (mode === 'closed') {
+      withSound.current = true;
+      setMode('stage');
+      return;
+    }
+    setMode('stage');
+    setSound(true);
+    if (video.current?.ended) play(true);
+  };
+
   const icon = {
     viewBox: '0 0 24 24',
     width: 18,
@@ -153,10 +155,11 @@ export function IntroFilm({ className = '', aboveDock = false }: { className?: s
     strokeLinejoin: 'round' as const,
     'aria-hidden': true
   };
+  const mini = mode === 'mini';
 
   return (
     <>
-      <button ref={opener} type="button" onClick={openFull} className={`intro-replay ${className}`}>
+      <button type="button" onClick={openStage} className={`intro-replay ${className}`}>
         <span aria-hidden="true" className="intro-replay-icon">
           <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor">
             <path d="M5 3.5v9l7.5-4.5z" />
@@ -168,11 +171,12 @@ export function IntroFilm({ className = '', aboveDock = false }: { className?: s
       {isOpen &&
         createPortal(
           <div
-            role={full ? 'dialog' : 'region'}
-            aria-modal={full ? true : undefined}
+            role={modal ? 'dialog' : 'region'}
+            aria-modal={modal ? true : undefined}
             aria-label="Tier One intro film"
             data-mode={mode}
             className={`intro-player ${aboveDock ? 'intro-above-dock' : ''} ${leaving ? 'intro-leaving' : ''}`}
+            onClick={(e) => mode === 'stage' && e.target === e.currentTarget && setMode('mini')}
           >
             <div className="intro-frame">
               <video
@@ -180,12 +184,21 @@ export function IntroFilm({ className = '', aboveDock = false }: { className?: s
                 poster={FILM.poster}
                 playsInline
                 preload="metadata"
-                onEnded={close}
-                onClick={() => !full && openFull()}
+                onEnded={onEnded}
+                onPlay={() => setPlaying(true)}
+                onPause={() => setPlaying(false)}
+                onClick={() => mini && openStage()}
                 onTimeUpdate={(e) => setProgress(e.currentTarget.currentTime / (e.currentTarget.duration || 1))}
-                className={`h-full w-full ${full ? 'object-contain' : 'cursor-pointer object-cover'}`}
+                className={`h-full w-full ${mode === 'full' ? 'object-contain' : 'object-cover'} ${mini ? 'cursor-pointer' : ''}`}
               />
               <div className="intro-bar">
+                {mini && !playing && (
+                  <button type="button" onClick={openStage} aria-label="Play the film" className="intro-icon-btn text-gold">
+                    <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
+                      <path d="M5 3.5v9l7.5-4.5z" />
+                    </svg>
+                  </button>
+                )}
                 <button
                   ref={firstControl}
                   type="button"
@@ -209,22 +222,34 @@ export function IntroFilm({ className = '', aboveDock = false }: { className?: s
                 <span aria-hidden="true" className="h-[2px] flex-1 overflow-hidden rounded-full bg-white/20">
                   <span className="block h-full origin-left bg-gold" style={{ transform: `scaleX(${progress})` }} />
                 </span>
-                <button
-                  type="button"
-                  onClick={() => (full ? setMode('mini') : openFull())}
-                  aria-label={full ? 'Shrink film' : 'Expand film'}
-                  className="intro-icon-btn"
-                >
-                  {full ? (
+                {mode === 'stage' && (
+                  <>
+                    <button type="button" onClick={() => setMode('mini')} aria-label="Shrink film" className="intro-icon-btn">
+                      <svg {...icon}>
+                        <path d="M14 10l6-6M14 10V5M14 10h5M10 14l-6 6M10 14v5M10 14H5" />
+                      </svg>
+                    </button>
+                    <button type="button" onClick={() => setMode('full')} aria-label="Full screen" className="intro-icon-btn">
+                      <svg {...icon}>
+                        <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
+                      </svg>
+                    </button>
+                  </>
+                )}
+                {mode === 'full' && (
+                  <button type="button" onClick={() => setMode('stage')} aria-label="Exit full screen" className="intro-icon-btn">
                     <svg {...icon}>
                       <path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" />
                     </svg>
-                  ) : (
+                  </button>
+                )}
+                {mini && (
+                  <button type="button" onClick={openStage} aria-label="Expand film" className="intro-icon-btn">
                     <svg {...icon}>
                       <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
                     </svg>
-                  )}
-                </button>
+                  </button>
+                )}
                 <button type="button" onClick={close} aria-label="Close film" className="intro-icon-btn">
                   <svg {...icon}>
                     <path d="M6 6l12 12M18 6L6 18" />

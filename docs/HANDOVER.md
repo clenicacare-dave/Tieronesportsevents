@@ -128,15 +128,16 @@ missing field fails the build.
 ### Intro film
 
 `components/IntroFilm.tsx` shows "The Journey to the Game" (39s). On a visitor's first visit to the home page
-or the holding page, a small muted player slides into the bottom corner after 1.2 seconds (above the phone dock
-on site pages), so the page is seen first. Expand opens it full screen with sound; Shrink or Escape returns it to
-the corner; Close or the end of the film dismisses it and stores `t1-intro-seen` in localStorage. "Watch the
-film" (home hero, holding page) opens it full screen at any time. Browsers may block sound until the visitor
-interacts, so the sound button is always there. It never autoplays for reduced-motion visitors. While it plays,
-`HeroRings` draws at half rate (a `t1:film` window event) so slower devices can keep up.
+or the holding page, the film opens one second after the page loads, centred and large (up to 1080px wide) over
+a dimmed page, muted until the visitor turns sound on. When it ends it shrinks into a small player in the bottom
+corner (above the phone dock on site pages), resting on the closing badge frame, and is stored as seen
+(`t1-intro-seen` in localStorage); play or expand there brings it back to the centre. Shrink, Escape or a click
+outside sends it to the corner early; Full screen and Close are in its control bar. "Watch the film" (home
+hero, holding page) opens it centred at any time. It never autoplays for reduced-motion visitors. While it
+plays, `HeroRings` draws at half rate (a `t1:film` window event) so slower devices can keep up.
 
-Files in `public/video/`: `intro-1080.mp4` (H.264, about 4.2 Mbps, 21 MB) for full screen on screens 1100px and wider, and `intro-720.mp4`
-(about 2.2 Mbps, 11 MB) for the small player, phones and data saver (it swaps at the same moment on expand); `intro-poster.jpg` is the first frame. The original
+Files in `public/video/`: `intro-1080.mp4` (H.264, about 4.2 Mbps, 21 MB) on screens 1100px and wider, and `intro-720.mp4`
+(about 2.2 Mbps, 11 MB) for smaller screens and data saver; `intro-poster.jpg` is the first frame. The original
 master is not in the repo (`uploads/` is git-ignored). Keep every file under the Workers static-asset limit of
 25 MiB. To replace the film, encode H.264 + AAC MP4s at those sizes (ffmpeg, HandBrake or any encoder), keep
 the file names, and re-run the tests. Tests start with the film marked as seen; `tests/intro.spec.ts` covers

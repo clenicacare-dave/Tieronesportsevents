@@ -242,7 +242,7 @@
   .nav-link::after { transition: none; }
 }
 
-/* Intro film (components/IntroFilm.tsx): a small player in the corner that expands to full screen. */
+/* Intro film (components/IntroFilm.tsx): centred and large on first play, then a small player in the corner. */
 .intro-player {
   position: fixed;
   z-index: 100;
@@ -270,11 +270,25 @@
   background: rgb(var(--color-navy));
   box-shadow: 0 24px 50px -18px rgb(0 0 0 / 0.65);
 }
+.intro-player[data-mode='stage'],
 .intro-player[data-mode='full'] {
   inset: 0;
   width: auto;
-  background: rgb(var(--color-navy));
   animation: intro-fade 0.35s ease both;
+}
+/* Centred: about three times the corner player, over a dimmed page. */
+.intro-player[data-mode='stage'] {
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgb(var(--color-navy) / 0.78);
+}
+.intro-player[data-mode='stage'] .intro-frame {
+  width: min(1080px, 100%, calc((100svh - 6rem) * 16 / 9));
+  box-shadow: 0 40px 90px -30px rgb(0 0 0 / 0.8);
+}
+.intro-player[data-mode='full'] {
+  background: rgb(var(--color-navy));
 }
 .intro-player[data-mode='full'] .intro-frame {
   height: 100%;
@@ -291,6 +305,10 @@
   gap: 0.25rem;
   padding: 1.5rem 0.4rem 0.3rem;
   background: linear-gradient(to top, rgb(var(--color-navy) / 0.85), transparent);
+}
+.intro-player[data-mode='stage'] .intro-bar {
+  gap: 0.5rem;
+  padding: 2.5rem 0.75rem 0.5rem;
 }
 .intro-player[data-mode='full'] .intro-bar {
   gap: 0.75rem;
