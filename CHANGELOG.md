@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.0 — Motion and mobile dock (2026-11-26)
+
+- Home hero: stadium photo layered under a navy-and-gold wash; T1 badge floats over it with a slow light sweep.
+- Gold rings: on desktop they leave the badge fast and slow as they spread; on phones a steady ripple. Ring overlay on every photo.
+- Phones and tablets: the badge straddles the hero edge; date and time in the header; a glass dock (Home, Events, Sports, Quote, More) with a three-quarter menu sheet (pattern from Swords Village).
+- Panels rise into view on scroll and lift on hover; sport tiles get Explore and Quote buttons (Quote pre-selects the sport).
+- Sport tiles swipe sideways on phones; full header nav from 1280px.
+- Everything respects reduced motion; accessibility checks run on the finished state.
+
 ## 0.3.0 — Photography (2026-11-25)
 
 - 11 free Unsplash photos (hero, five sports, three services, two events), credited, with sources in `content/photos.ts`.
