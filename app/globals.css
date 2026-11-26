@@ -57,13 +57,6 @@
       linear-gradient(90deg, rgb(var(--color-navy) / 0.97) 25%, rgb(var(--color-navy) / 0.72) 55%, rgb(var(--color-navy) / 0.5) 100%),
       linear-gradient(180deg, rgb(15 26 38 / 0.35), transparent 30%, transparent 70%, rgb(15 26 38 / 0.55));
   }
-  /* Desktop hero: faint fixed fine lines (the approved texture) under eased moving rings. */
-  .hero-rings-still {
-    border-radius: 9999px;
-    background-image: repeating-radial-gradient(circle at center, transparent 0 56px, rgb(var(--color-gold) / 0.1) 56px 57px);
-    -webkit-mask-image: radial-gradient(circle at center, #000 45%, transparent 75%);
-    mask-image: radial-gradient(circle at center, #000 45%, transparent 75%);
-  }
   /* Badge: slow float, and a light sweep across it, clipped to the circle. */
   .hero-badge {
     border-radius: 9999px;

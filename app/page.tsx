@@ -25,7 +25,6 @@ export default function HomePage() {
             data-ring-centre
             className="pointer-events-none absolute right-[6%] top-1/2 -z-10 hidden w-[420px] -translate-y-1/2 xl:block"
           >
-            <div className="hero-rings-still absolute left-1/2 top-1/2 -z-20 aspect-square w-[700%] -translate-x-1/2 -translate-y-1/2" />
             <HeroBadge />
           </div>
           <Eyebrow tone="light">Experience sport differently</Eyebrow>
