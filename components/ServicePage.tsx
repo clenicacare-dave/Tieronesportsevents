@@ -24,7 +24,7 @@ export function ServicePage({ slug }: { slug: Service['slug'] }) {
         </div>
       </PageHero>
 
-      <section className="bg-surface">
+      <section className="ring-corner overflow-hidden bg-surface">
         <div className="mx-auto grid max-w-site lg:grid-cols-[1fr_1.1fr]">
           <PhotoSlot photo={s.photo} label={s.eyebrow.split(' ')[0]} className="group min-h-[280px] lg:min-h-full" sizes="(min-width: 1024px) 45vw, 100vw" />
           <div className="px-5 py-16 sm:px-12 lg:py-20">

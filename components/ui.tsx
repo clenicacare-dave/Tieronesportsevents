@@ -57,9 +57,9 @@ export function Section({
   className?: string;
   id?: string;
 }) {
-  const bg = tone === 'white' ? 'bg-white' : tone === 'navy' ? 'bg-navy text-white' : 'bg-surface';
+  const bg = tone === 'white' ? 'bg-white' : tone === 'navy' ? 'bg-navy text-white ring-gold' : 'bg-surface';
   return (
-    <section id={id} className={bg}>
+    <section id={id} className={`ring-corner overflow-hidden ${bg}`}>
       <div className={`mx-auto max-w-site px-5 py-16 sm:px-8 sm:py-24 ${className}`}>{children}</div>
     </section>
   );
@@ -120,8 +120,10 @@ export function SportCard({ sport, index, className = '' }: { sport: Sport; inde
   // The whole tile opens the sport (stretched title link); the Quote button sits above it.
   return (
     <article className={`reveal group relative overflow-hidden bg-navy text-white ${className}`}>
-      <PhotoSlot photo={sport.photo} small className="aspect-[3/4] xl:aspect-[2/3]" />
+      <PhotoSlot photo={sport.photo} small rings={false} className="aspect-[3/4] xl:aspect-[2/3]" />
       <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/80 to-navy/5 transition-opacity duration-500 group-hover:opacity-90" />
+      {/* Rings above the shading, so they show as strongly as on the other cards. */}
+      <div aria-hidden="true" className="photo-rings photo-rings-sm" />
       <div className="absolute inset-x-0 bottom-0 p-5 transition-transform duration-500 ease-out [@media(hover:hover)]:translate-y-2 [@media(hover:hover)]:group-hover:translate-y-0">
         <p className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-gold sm:text-xs">
           {index !== undefined && `${String(index + 1).padStart(2, '0')} / `}

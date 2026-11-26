@@ -88,9 +88,9 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background-image: repeating-radial-gradient(circle at 88% 115%, transparent 0 54px, rgb(var(--color-gold) / 0.2) 54px 55px);
-    -webkit-mask-image: radial-gradient(circle at 88% 115%, #000 20%, transparent 85%);
-    mask-image: radial-gradient(circle at 88% 115%, #000 20%, transparent 85%);
+    background-image: repeating-radial-gradient(circle at 88% 115%, transparent 0 54px, rgb(var(--color-gold) / 0.5) 54px 55.5px);
+    -webkit-mask-image: radial-gradient(circle at 88% 115%, #000 30%, transparent 90%);
+    mask-image: radial-gradient(circle at 88% 115%, #000 30%, transparent 90%);
   }
   .photo-rings {
     transform-origin: 88% 115%;
@@ -142,8 +142,34 @@
     inset: 0;
     pointer-events: none;
     background-image:
-      repeating-radial-gradient(ellipse at 95% 140%, transparent 0 70px, rgb(var(--color-gold) / 0.07) 70px 71px),
+      repeating-radial-gradient(ellipse at 95% 140%, transparent 0 56px, rgb(var(--color-gold) / 0.2) 56px 57.5px),
       radial-gradient(ellipse at 95% 130%, rgb(var(--color-gold) / 0.12), transparent 50%);
+  }
+
+  /* Rings that break up plain backgrounds: a set of concentric rings rising from one corner and
+     fading out, navy on the light sections and gold on navy. Consecutive sections alternate corners.
+     Sits behind the content (isolation + z-index -1), so nothing needs extra markup. */
+  .ring-corner {
+    position: relative;
+    isolation: isolate;
+    --ring-ink: rgb(var(--color-navy) / 0.09);
+    --ring-at: 104% -12%;
+  }
+  .ring-corner:nth-of-type(even) {
+    --ring-at: -8% 112%;
+  }
+  .ring-corner.ring-gold {
+    --ring-ink: rgb(var(--color-gold) / 0.16);
+  }
+  .ring-corner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: repeating-radial-gradient(circle at var(--ring-at), transparent 0 56px, var(--ring-ink) 56px 57.5px);
+    -webkit-mask-image: radial-gradient(circle at var(--ring-at), #000 0, #000 18%, transparent 62%);
+    mask-image: radial-gradient(circle at var(--ring-at), #000 0, #000 18%, transparent 62%);
   }
 
   .prose-t1 {

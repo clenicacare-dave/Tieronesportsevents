@@ -23,7 +23,7 @@ export default function QuotePage() {
   return (
     <>
       <PageHero eyebrow="Request a quote" title="Tell us where you want to be" intro="A few details are enough to start. There is no payment and no commitment." />
-      <section className="bg-surface">
+      <section className="ring-corner overflow-hidden bg-surface">
         <div className="mx-auto grid max-w-site gap-12 px-5 py-16 sm:px-8 lg:grid-cols-[1fr_1.6fr] lg:py-20">
           <ol className="space-y-8 lg:pt-4">
             {howItWorks.map((s) => (
