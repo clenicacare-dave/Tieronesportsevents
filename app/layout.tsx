@@ -1,12 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import { Barlow_Condensed, Inter } from 'next/font/google';
 import './globals.css';
-import { SiteHeader } from '@/components/SiteHeader';
-import { SiteFooter } from '@/components/SiteFooter';
-import { MobileDock } from '@/components/MobileDock';
-import { JsonLd } from '@/components/ui';
 import { brand } from '@/brand/brand';
-import { site, absoluteUrl } from '@/lib/site';
+import { site } from '@/lib/site';
 
 // Fonts are downloaded at build time and served from this site: no runtime calls to Google.
 const heading = Barlow_Condensed({ subsets: ['latin'], weight: ['500', '600'], variable: '--font-heading', display: 'swap' });
@@ -40,23 +36,7 @@ export const viewport: Viewport = { themeColor: brand.themeColor, viewportFit: '
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-IE" className={`${heading.variable} ${body.variable}`}>
-      <body>
-        <SiteHeader />
-        <main id="main">{children}</main>
-        <SiteFooter />
-        <MobileDock />
-        <JsonLd
-          data={{
-            '@context': 'https://schema.org',
-            '@type': 'TravelAgency',
-            name: brand.name,
-            url: site.url,
-            logo: absoluteUrl(brand.icons.icon512),
-            email: site.email,
-            areaServed: ['IE', 'GB']
-          }}
-        />
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

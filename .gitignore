@@ -33,3 +33,6 @@ pnpm-debug.log*
 
 # Raw uploads (originals; web versions live in public/photos)
 uploads/
+
+# The private preview link token (also a Worker secret)
+.preview-token

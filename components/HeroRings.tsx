@@ -12,7 +12,8 @@ import { useEffect, useRef } from 'react';
 const GOLD = '217, 183, 108';
 const DESKTOP = '(min-width: 1280px)';
 
-export function HeroRings() {
+// centred: always ring the [data-ring-centre] element (the holding page), at every width.
+export function HeroRings({ centred = false }: { centred?: boolean }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -40,7 +41,7 @@ export function HeroRings() {
       canvas.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       const anchor = section.querySelector<HTMLElement>('[data-ring-centre]');
-      if (wide.matches && anchor) {
+      if ((centred || wide.matches) && anchor) {
         const a = anchor.getBoundingClientRect();
         cx = a.left - box.left + a.width / 2;
         cy = a.top - box.top + a.height / 2;
@@ -92,7 +93,7 @@ export function HeroRings() {
     const tick = (now: number) => {
       ctx.clearRect(0, 0, w, h);
       const s = now / 1000;
-      if (wide.matches) drawWide(s);
+      if (r0 > 0) drawWide(s);
       else drawNarrow(s);
       frame = visible ? requestAnimationFrame(tick) : 0;
     };
@@ -123,7 +124,7 @@ export function HeroRings() {
       seen.disconnect();
       wide.removeEventListener('change', measure);
     };
-  }, []);
+  }, [centred]);
 
   return <canvas ref={ref} aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 h-full w-full" />;
 }
