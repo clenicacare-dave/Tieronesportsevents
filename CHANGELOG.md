@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.0 — Holding page and private link (2026-11-26)
+
+- Public sees a "Coming soon" holding page on every address; the full site opens only through a private link (`/preview/<token>`, cookie for 90 days). Nothing is indexed while gated.
+- To launch: set `SITE_GATE` to "off" in wrangler.jsonc and deploy.
+
 ## 0.5.2 — Header (2026-11-26)
 
 - Menu in the logo's lettering, gold rule on hover and for the current page, divider before Request a quote; compact glass header on scroll; gold hairline underneath.
